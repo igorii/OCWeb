@@ -3,14 +3,13 @@ BlinkTag OC Transpo App
 
 Authors
 -------
-Tim Thornton
-Sehwan Lee
-*TA* Furkan
+* Tim Thornton
+* Sehwan Lee
+* *TA* Furkan
 
 Description
 -----------
-OC App is a web application using Node.js/MongoDB backend, and HTML/CSS/JS frontend. This application will make use of the (http://www.octranspo1.com/developers/documentation/ 
-“Developer API”) provided by OC Transpo, as well as (https://developers.google.com/maps/documentation/javascript/reference/ “Google Maps V3”). The entire OC Transpo schedule will be stored in MongoDB, and accessible through our front end client.
+OC App is a web application using Node.js/MongoDB backend, and HTML/CSS/JS frontend. This application will make use of the [Developer API](http://www.octranspo1.com/developers/documentation/) provided by OC Transpo, as well as [Google Maps V3](https://developers.google.com/maps/documentation/javascript/reference/). The entire OC Transpo schedule will be stored in MongoDB, and accessible through our front end client.
 
 This application will be primarily used for displaying the real-time locations of buses using GPS data provided by the above API. Some of the key features of this application are:
 * Stop schedule reliability
