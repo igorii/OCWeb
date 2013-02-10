@@ -31,7 +31,6 @@ app.configure('development', function(){
 app.get('/', map.home);
 app.get('/users', user.list);
 app.post('/getTrips', map.getTrips);
-app.post('/', map.home_post_handler);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
