@@ -18,12 +18,12 @@
 
 
   // handler for getting trips
-  exports.getTrips = function(req, res) {
+  exports.getSummary = function(req, res) {
     console.log('Incoming request for stop - ' + req.body.stopID);
 
     // Generate POST request body
-    var body = 'appID=' + ocTranspoID + '&apiKey=' + ocTranspoKey + '&stopNo=';
-    body += req.body.stopID;
+    var body = 'appID=' + ocTranspoID + '&apiKey=' + ocTranspoKey;
+    body += '&stopNo=' + req.body.stopID;
 
     // Query OCTranspo servers for stop summary
     request({
@@ -38,8 +38,34 @@
         try {
           result = result['soap:Envelope']['soap:Body'][0]['GetRouteSummaryForStopResponse'][0]['GetRouteSummaryForStopResult'][0];
           res.send(JSON.stringify(result));
-        } catch (e) {}
+        } catch (e) {
           res.send(JSON.stringify({error: 'invalid response'}));
+        }
+      })
+    });
+  };
+
+  // handler for getting trips
+  exports.getTrips = function(req, res) {
+    console.log('Incoming request for stop - ' + req.body.stopID);
+
+    // Generate POST request body
+    var body = 'appID=' + ocTranspoID + '&apiKey=' + ocTranspoKey;
+    body += '&stopNo=' + req.body.stopID;
+    body += '&routeNo=' + req.body.routeNo;
+
+    // Query OCTranspo servers for stop summary
+    request({
+      uri: 'https://api.octranspo1.com/v1.1/GetNextTripsForStop',
+      method: 'POST',
+      body: body,
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    }, function (error, response, body) {
+      xml2js.parseString(body, function (err, result) {
+        result = result['soap:Envelope']['soap:Body'][0]['GetNextTripsForStopResponse'][0]['GetNextTripsForStopResult'][0]['Route'][0]['RouteDirection'][0];
+        res.send(JSON.stringify(result));
       })
     });
   };
