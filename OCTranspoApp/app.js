@@ -31,6 +31,7 @@ app.configure('development', function(){
 // Routes
 app.get('/', map.home);
 app.get('/users', user.list);
+app.post('/getSummary', map.getSummary);
 app.post('/getTrips', map.getTrips);
 
 http.createServer(app).listen(app.get('port'), function(){
