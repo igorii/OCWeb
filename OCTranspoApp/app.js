@@ -7,7 +7,8 @@ var express = require('express')
   , map = require('./routes/map')
   , user = require('./routes/user')
   , http = require('http')
-  , path = require('path');
+  , path = require('path')
+  , http = require('http');
 
 var app = express();
 
