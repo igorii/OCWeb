@@ -1,10 +1,15 @@
-#sidebar
+div#sidebar
+    h1 OC Transpo App
     br
     p Get route summary for stop
     input(type='text', id='stopID')
-    button(id='submitStopByID') Get summary
+    button(id='submitStopByID') Go
+    br
     br
     p Get trips for route
     input(type='text', id='routeNo')
-    button(id='submitRouteByID') Get trips
+    button(id='submitRouteByID') Go
     script(src='/js/sidebar.js')
+    br
+    br
+    div#results

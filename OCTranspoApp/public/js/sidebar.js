@@ -24,7 +24,8 @@ $('#submitStopByID').click(function() {
             str += '\n';
         }
 
-        alert(str);
+        //alert(str);
+        $('#results').text(str);
     });
 });
 
@@ -47,6 +48,7 @@ $('#submitRouteByID').click(function() {
             str += '\n';
         }
 
-        alert(str);
+        //alert(str);
+        $('#results').text(str);
     });
 });
