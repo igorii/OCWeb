@@ -31,16 +31,20 @@ var map = (function () {
                 map: this.map_canvas
             }));
 
-            google.maps.event.addListener(markers[i], 'click', function () {
-                console.log('opening window');
-                infowindow.setContent(this.html);
-                infowindow.open(map.map_canvas, this);
-            });
+            bindInfoWindow(markers[i], this.map_canvas, infowindow, markers[i].title);
         }
 
         // Add the markers to a clusterer so that not every marker is
         // drawn at a time
         map.clusters = new MarkerClusterer(this.map_canvas, markers);
+
+        // Function used to bind infowindow to each marker
+        function bindInfoWindow(marker, map, infowindow, html) {
+            google.maps.event.addListener(marker, 'click', function() {
+                infowindow.setContent(html);
+                infowindow.open(map, marker);
+            });
+        }
     }
 
     return map;
