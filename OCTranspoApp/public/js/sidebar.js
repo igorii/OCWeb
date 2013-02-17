@@ -1,8 +1,34 @@
-$('#submitStopByID').click(function() {
-    var stopID = $('#stopID').val();
+function getTrips (stopID, routeNo) {
+    $.post('/getTrips', { stopID: stopID, routeNo: routeNo }).done(function(result) {
+        var str;
+        var results = [];
 
+        // Parse results into js
+        result = JSON.parse(result);
+        trips = result['Trips'][0]['Trip'];
+
+        // Format stops into html
+        for (var i = 0; i < trips.length; ++i) {
+            str = '';
+            str += 'Trip in ' + trips[i].AdjustedScheduleTime + ' minutes';
+            str += '<br>&nbsp&nbsp&nbsp&nbsp';
+            str += '<i>';
+            str += (trips[i].AdjustmentAge != -1) ?
+                (' (Updated ' + (trips[i].AdjustmentAge * 60 + '').slice(0, 4) + ' seconds ago)') :
+                (' (Based on scheduled time)');
+            str += '</i>';
+            results.push(str);
+        }
+
+        // Display stops as individual divs
+        displayResults(results, 'routeResults', false);
+    });
+}
+
+function getSummary (stopID) {
     $.post('/getSummary', { stopID: stopID }).done(function(result) {
-        var str = '';
+        var str;
+        var results = [];
 
         // Parse results into js
         result = JSON.parse(result);
@@ -18,37 +44,56 @@ $('#submitStopByID').click(function() {
         // Get route information
         var routes = result['Routes'][0]['Route'];
         for (var i = 0; i < routes.length; ++i) {
+            str = '';
             str += routes[i].RouteNo[0] + ' ';
             str += routes[i].RouteHeading[0] + ' ';
             str += '(' + routes[i].Direction + ')';
-            str += '\n';
+            results.push(str);
         }
 
-        //alert(str);
-        $('#results').text(str);
+        displayResults(results, 'summaryResults', true);
     });
+}
+
+$('#submitStopByID').click(function() {
+    var stopID = $('#stopID').val();
+    getSummary(stopID);
 });
 
 $('#submitRouteByID').click(function() {
-    var stopID = $('#stopID').val();
-    var routeNo = $('#routeNo').val();
-
-    $.post('/getTrips', { stopID: stopID, routeNo: routeNo }).done(function(result) {
-        var str = '';
-
-        // Parse results into js
-        result = JSON.parse(result);
-        trips = result['Trips'][0]['Trip'];
-
-        for (var i = 0; i < trips.length; ++i) {
-            str += 'Trip in ' + trips[i].AdjustedScheduleTime + ' minutes';
-            str += (trips[i].AdjustmentAge != -1) ?
-                (' (Updated ' + (trips[i].AdjustmentAge * 60) + ' seconds ago)') :
-                (' (Based on scheduled time)');
-            str += '\n';
-        }
-
-        //alert(str);
-        $('#results').text(str);
-    });
+    getTrips($('#stopID').val(), $('#routeNo').val());
 });
+
+function displayResults (array, id, clickable) {
+    var results = document.getElementById(id);
+
+    deleteChildrenById(id);
+    results.innerHTML = '<b>Results</b>';
+
+    for (var i = 0, j = array.length; i < j; ++i) {
+        var div = document.createElement('div');
+        div.innerHTML += array[i];
+        div.className = 'result';
+
+        // Handle mouse events
+        div.onmouseover = function () { this.style.background = '#FFFEBF'; };
+        div.onmouseout  = function () { this.style.background = '#FFF'; };
+        if (clickable) bindClick(div, array[i]);
+
+        results.appendChild(div);
+    }
+
+    function bindClick (div, string) {
+        div.onclick = function () {
+            var routeNo = parseInt(string);
+            getTrips($('#stopID').val(), routeNo);
+        };
+    }
+}
+
+function deleteChildrenById (id) {
+    var node = document.getElementById(id);
+
+    while (node.hasChildNodes())
+        node.removeChild(node.lastChild);
+}

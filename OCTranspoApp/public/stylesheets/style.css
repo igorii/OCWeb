@@ -25,3 +25,8 @@ html {
     width: 255px;
     padding: 10px;
 }
+
+.result {
+    padding-bottom: 10px;
+    padding-top: 10px;
+}
