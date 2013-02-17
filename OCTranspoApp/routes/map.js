@@ -12,10 +12,19 @@
         , ocTranspoID = '59bd2043';
 
     // main handler for get requests to /
-    exports.home = function(req, res){
-        res.render('home', { title: 'OCTranspo App' })
+    exports.home = function(req, res) {
+        var ua = req.header('user-agent');
+        if(/mobile/i.test(ua)) {
+            res.render('home-mobile', {
+                title: 'OCTranspo App',
+                layout: 'layout-mobile'
+            });
+        } else {
+            res.render('home', {
+                title: 'OCTranspo App'
+            });
+        }
     };
-
 
     // handler for getting trips
     exports.getSummary = function(req, res) {
