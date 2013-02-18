@@ -5,7 +5,7 @@ function getTrips (stopID, routeNo) {
 
         // Parse results into js
         result = JSON.parse(result);
-        trips = result['Trips'][0]['Trip'];
+        var trips = result['Trips'][0]['Trip'];
 
         // Format stops into html
         for (var i = 0; i < trips.length; ++i) {
@@ -57,6 +57,14 @@ function getSummary (stopID) {
 
 $('#submitStopByID').click(function() {
     var stopID = $('#stopID').val();
+    
+    for (var i = 0, j = stops.length; i < j; ++i) {
+        if (stopID === stops[i]['stop_code']) {
+            map.setCenter(stops[i]['stop_lat'], stops[i]['stop_lon']);
+            map.setZoom(18);   
+        }
+    }
+    
     getSummary(stopID);
 });
 
@@ -69,6 +77,9 @@ function displayResults (array, id, clickable) {
 
     deleteChildrenById(id);
     results.innerHTML = '<b>Results</b>';
+    
+    var handleMouseOver = function () { this.style.background = '#FFFEBF'; };
+    var handleMouseOut  = function () { this.style.background = '#FFF'; }; 
 
     for (var i = 0, j = array.length; i < j; ++i) {
         var div = document.createElement('div');
@@ -76,8 +87,8 @@ function displayResults (array, id, clickable) {
         div.className = 'result';
 
         // Handle mouse events
-        div.onmouseover = function () { this.style.background = '#FFFEBF'; };
-        div.onmouseout  = function () { this.style.background = '#FFF'; };
+        div.onmouseover = handleMouseOver;
+        div.onmouseout  = handleMouseOut;
         if (clickable) bindClick(div, array[i]);
 
         results.appendChild(div);

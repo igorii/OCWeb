@@ -4,7 +4,7 @@ var map = (function () {
     map.map_canvas = null;
 
     // Initialize to a view of Ottawa in general
-    map.initialize = function () {
+    map.initialize = function () {        
         // Set canvas size
         $('#map_canvas').css({
             width: $(window).width() - 300,
@@ -19,7 +19,7 @@ var map = (function () {
         };
 
         // Create the map
-        this.map_canvas = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
+        map.map_canvas = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
 
         // Draw every bus stop (temporary)
         var markers = [];
@@ -28,15 +28,15 @@ var map = (function () {
             markers.push(new google.maps.Marker({
                 position: new google.maps.LatLng(stops[i]["stop_lat"], stops[i]["stop_lon"]),
                 title: stops[i]["stop_name"],
-                map: this.map_canvas
+                map: map.map_canvas
             }));
 
-            bindInfoWindow(markers[i], this.map_canvas, infowindow, markers[i].title);
+            bindInfoWindow(markers[i], map.map_canvas, infowindow, markers[i].title);
         }
 
         // Add the markers to a clusterer so that not every marker is
         // drawn at a time
-        map.clusters = new MarkerClusterer(this.map_canvas, markers);
+        map.clusters = new MarkerClusterer(map.map_canvas, markers);
 
         // Function used to bind infowindow to each marker
         function bindInfoWindow(marker, map, infowindow, html) {
@@ -45,6 +45,17 @@ var map = (function () {
                 infowindow.open(map, marker);
             });
         }
+    }
+    
+    map.setCenter = function (lat, lng) {
+        var latlng = new google.maps.LatLng(lat, lng);
+        map.map_canvas.setCenter(latlng);
+        return map;
+    }
+    
+    map.setZoom = function (zoom) {
+        map.map_canvas.setZoom(zoom);
+        return map;
     }
 
     return map;
