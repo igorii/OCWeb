@@ -1,10 +1,10 @@
-var map = (function () {
-    var map = {};
-
-    map.map_canvas = null;
+var Map = (function (Map) {
+    
+    Map.map_canvas = null;
+    Map.customMarkers = [];
 
     // Initialize to a view of Ottawa in general
-    map.initialize = function () {        
+    Map.initialize = function () {        
         // Set canvas size
         $('#map_canvas').css({
             width: $(window).width() - 300,
@@ -13,13 +13,13 @@ var map = (function () {
 
         // Set the map options
         var mapOptions = {
-            zoom: 15,
+            zoom: 16,
             center: new google.maps.LatLng(45.415804, -75.700607),
             mapTypeId: google.maps.MapTypeId.ROADMAP
         };
 
         // Create the map
-        map.map_canvas = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
+        Map.map_canvas = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
 
         // Draw every bus stop (temporary)
         var markers = [];
@@ -28,15 +28,15 @@ var map = (function () {
             markers.push(new google.maps.Marker({
                 position: new google.maps.LatLng(stops[i]["stop_lat"], stops[i]["stop_lon"]),
                 title: stops[i]["stop_name"],
-                map: map.map_canvas
+                map: Map.map_canvas
             }));
 
-            bindInfoWindow(markers[i], map.map_canvas, infowindow, markers[i].title);
+            bindInfoWindow(markers[i], Map.map_canvas, infowindow, markers[i].title);
         }
 
         // Add the markers to a clusterer so that not every marker is
         // drawn at a time
-        map.clusters = new MarkerClusterer(map.map_canvas, markers);
+        Map.clusters = new MarkerClusterer(Map.map_canvas, markers);
 
         // Function used to bind infowindow to each marker
         function bindInfoWindow(marker, map, infowindow, html) {
@@ -47,18 +47,32 @@ var map = (function () {
         }
     }
     
-    map.setCenter = function (lat, lng) {
+    Map.setCenter = function (lat, lng) {
         var latlng = new google.maps.LatLng(lat, lng);
-        map.map_canvas.setCenter(latlng);
-        return map;
+        Map.map_canvas.setCenter(latlng);
+        return Map;
     }
     
-    map.setZoom = function (zoom) {
-        map.map_canvas.setZoom(zoom);
-        return map;
+    Map.setZoom = function (zoom) {
+        Map.map_canvas.setZoom(zoom);
+        return Map;
+    }
+    
+    Map.addMarker = function (lat, lng, title, content, img) {
+        var infowindow = new google.maps.InfoWindow({ content: 'incoming...' });
+        var marker = new google.maps.Marker({
+            position: new google.maps.LatLng(lat, lng),
+            title: title,
+            map: Map.map_canvas
+        });
+        Map.customMarkers.push(marker);
+        google.maps.event.addListener(marker, 'click', function () {
+           infowindow.setContent(content);
+           infowindow.open(Map.map_canvas, marker);
+        });
     }
 
-    return map;
-}());
+    return Map;
+}(Map || {}));
 
-google.maps.event.addDomListener(window, 'load', map.initialize);
+google.maps.event.addDomListener(window, 'load', Map.initialize);
