@@ -1,6 +1,7 @@
 var Map = (function (Map) {
     
     Map.map_canvas = null;
+    Map.stopMarkers = [];
     Map.customMarkers = [];
 
     // Initialize to a view of Ottawa in general
@@ -22,21 +23,21 @@ var Map = (function (Map) {
         Map.map_canvas = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
 
         // Draw every bus stop (temporary)
-        var markers = [];
         var infowindow = new google.maps.InfoWindow({ content: 'incoming...' });
         for (var i = 0, j = stops.length; i < j; ++i) {
-            markers.push(new google.maps.Marker({
+            Map.stopMarkers.push(new google.maps.Marker({
                 position: new google.maps.LatLng(stops[i]["stop_lat"], stops[i]["stop_lon"]),
                 title: stops[i]["stop_name"],
-                map: Map.map_canvas
+                map: null
             }));
 
-            bindInfoWindow(markers[i], Map.map_canvas, infowindow, markers[i].title);
+            bindInfoWindow(Map.stopMarkers[i], Map.map_canvas, infowindow, 
+                           Map.stopMarkers[i].title);
         }
 
         // Add the markers to a clusterer so that not every marker is
         // drawn at a time
-        Map.clusters = new MarkerClusterer(Map.map_canvas, markers);
+        //Map.clusters = new MarkerClusterer(Map.map_canvas, markers);
 
         // Function used to bind infowindow to each marker
         function bindInfoWindow(marker, map, infowindow, html) {
@@ -45,18 +46,18 @@ var Map = (function (Map) {
                 infowindow.open(map, marker);
             });
         }
-    }
+    };
     
     Map.setCenter = function (lat, lng) {
         var latlng = new google.maps.LatLng(lat, lng);
         Map.map_canvas.setCenter(latlng);
         return Map;
-    }
+    };
     
     Map.setZoom = function (zoom) {
         Map.map_canvas.setZoom(zoom);
         return Map;
-    }
+    };
     
     Map.addMarker = function (lat, lng, title, content, img) {
         var infowindow = new google.maps.InfoWindow({ content: 'incoming...' });
@@ -70,7 +71,21 @@ var Map = (function (Map) {
            infowindow.setContent(content);
            infowindow.open(Map.map_canvas, marker);
         });
-    }
+    };
+    
+    Map.toggleStopMarkers = function (show) {
+        var map = null;
+        
+        if (show) 
+            map = Map.map_canvas;
+
+        for (var i = 0, j = Map.stopMarkers.length; i < j; ++i)
+            Map.stopMarkers[i].setMap(map);
+    };
+    
+    Map.stopMarkersOn = function () {
+        return Map.stopMarkers[0].getMap();
+    };
 
     return Map;
 }(Map || {}));
