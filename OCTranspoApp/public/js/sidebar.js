@@ -1,94 +1,140 @@
-/* Responsible for retrieving the next trips for a given stop from the server */
-function getTrips (stopID, routeNo) {
-    $.post('/getTrips', { stopID: stopID, routeNo: routeNo }).done(function(result) {
-        var str;
-        var results = [];
-
-        // Parse results into js
-        result = JSON.parse(result);
-        var trips = result['Trips'][0]['Trip'];
-        var bus = {
-            lat: trips[0]['Latitude'][0],
-            lng: trips[0]['Longitude'][0]
-        };
+var Sidebar = (function (Sidebar) {
+    
+    Sidebar.lastRoute = null;
+    
+    /* Responsible for retrieving the next trips for a given stop from the server */
+    Sidebar.getTrips = function (stopID, routeNo) {
+        $.post('/getTrips', { stopID: stopID, routeNo: routeNo }).done(function(result) {
+            var str;
+            var results = [];
+    
+            // Parse results into js
+            result = JSON.parse(result);
+            var trips = result['Trips'][0]['Trip'];
+            var bus = {
+                lat: trips[0]['Latitude'][0],
+                lng: trips[0]['Longitude'][0]
+            };
+            
+            // Draw a marker at the current location of the bus, and pan to that
+            // location
+            if (bus.lat && bus.lng) {
+                Map.addMarker(bus.lat, bus.lng, "BUS", "THIS IS THE BUS", null);
+                Map.setCenter(bus.lat, bus.lng);
+            }
+    
+            // Format stops into html
+            for (var i = 0; i < trips.length; ++i) {
+                str = '';
+                str += 'Trip in ' + trips[i].AdjustedScheduleTime + ' minutes';
+                str += '<br>&nbsp&nbsp&nbsp&nbsp';
+                str += '<i>';
+                str += (trips[i].AdjustmentAge != -1) ?
+                    (' (Updated ' + (trips[i].AdjustmentAge * 60 + '').slice(0, 4) + ' seconds ago)') :
+                    (' (Based on scheduled time)');
+                str += '</i>';
+                results.push(str);
+            }
+    
+            // Display stops as individual divs
+            displayResults(results, 'routeResults', false);
+        });    
+    };
+    
+    /* Responsible for retrieving the busses that stop at a given stop from the
+     * server */
+    Sidebar.getSummary = function (stopID) {
+        $.post('/getSummary', { stopID: stopID }).done(function(result) {
+            var str;
+            var results = [];
+            
+            // Clear results from previous stop
+            deleteChildrenById('routeResults');
+    
+            // Parse results into js
+            result = JSON.parse(result);
+    
+            var routes;
+            try {
+                routes = result['Routes'][0]['Route'];
+            } catch (e) {
+                alert('Incorrect response');
+                return { error: 'Incorrect response from server' };
+            }
+    
+            // Get route information
+            var routes = result['Routes'][0]['Route'];
+            for (var i = 0; i < routes.length; ++i) {
+                str = '';
+                str += routes[i].RouteNo[0] + ' ';
+                str += routes[i].RouteHeading[0] + ' ';
+                str += '(' + routes[i].Direction + ')';
+                results.push(str);
+            }
+            
+            Sidebar.lastRoute = stopID;
+            displayResults(results, 'summaryResults', true);
+        });        
+    };
+    
+    /* Displays an array of strings as a series of divs under the given DOM ID
+     * If clickable is true, then a function is bound to each div that retrieves 
+     * the appropriate trips when clicked */
+    function displayResults (array, id, clickable) {
+        var results = document.getElementById(id);
+    
+        deleteChildrenById(id);
+        results.innerHTML = '<b>Results</b>';
         
-        // Draw a marker at the current location of the bus, and pan to that
-        // location
-        if (bus.lat && bus.lng) {
-            Map.addMarker(bus.lat, bus.lng, "BUS", "THIS IS THE BUS", null);
-            Map.setCenter(bus.lat, bus.lng);
+        var handleMouseOver = function () { this.style.background = '#FFFEBF'; };
+        var handleMouseOut  = function () { this.style.background = '#FFF'; }; 
+    
+        for (var i = 0, j = array.length; i < j; ++i) {
+            var div = document.createElement('div');
+            div.innerHTML += array[i];
+            div.className = 'result';
+    
+            // Handle mouse events
+            div.onmouseover = handleMouseOver;
+            div.onmouseout  = handleMouseOut;
+            if (clickable) bindClick(div, array[i]);
+    
+            results.appendChild(div);
         }
-
-        // Format stops into html
-        for (var i = 0; i < trips.length; ++i) {
-            str = '';
-            str += 'Trip in ' + trips[i].AdjustedScheduleTime + ' minutes';
-            str += '<br>&nbsp&nbsp&nbsp&nbsp';
-            str += '<i>';
-            str += (trips[i].AdjustmentAge != -1) ?
-                (' (Updated ' + (trips[i].AdjustmentAge * 60 + '').slice(0, 4) + ' seconds ago)') :
-                (' (Based on scheduled time)');
-            str += '</i>';
-            results.push(str);
+    
+        function bindClick (div, string) {
+            div.onclick = function () {
+                var routeNo = parseInt(string);
+                Sidebar.getTrips($('#stopID').val(), routeNo);
+            };
         }
+    }
+    
+    return Sidebar;
+}(Sidebar || {}));
 
-        // Display stops as individual divs
-        displayResults(results, 'routeResults', false);
-    });
-}
-
-/* Responsible for retrieving the busses that stop at a given stop from the
- * server */
-function getSummary (stopID) {
-    $.post('/getSummary', { stopID: stopID }).done(function(result) {
-        var str;
-        var results = [];
-        
-        // Clear results from previous stop
-        deleteChildrenById('routeResults');
-
-        // Parse results into js
-        result = JSON.parse(result);
-
-        var routes;
-        try {
-            routes = result['Routes'][0]['Route'];
-        } catch (e) {
-            alert('Incorrect response');
-            return { error: 'Incorrect response from server' };
-        }
-
-        // Get route information
-        var routes = result['Routes'][0]['Route'];
-        for (var i = 0; i < routes.length; ++i) {
-            str = '';
-            str += routes[i].RouteNo[0] + ' ';
-            str += routes[i].RouteHeading[0] + ' ';
-            str += '(' + routes[i].Direction + ')';
-            results.push(str);
-        }
-
-        displayResults(results, 'summaryResults', true);
-    });
-}
 
 /* Handle input */
 
 $('#submitStopByID').click(function() {
     var stopID = $('#stopID').val();
     
+    if (Sidebar.lastRoute && !Map.stopMarkersOn())
+        Map.toggleStopMarker(false, Sidebar.lastRoute, false);
+    
     for (var i = 0, j = stops.length; i < j; ++i) {
         if (stopID === stops[i]['stop_code']) {
+            Map.toggleStopMarker(true, i, true);
             Map.setCenter(stops[i]['stop_lat'], stops[i]['stop_lon']);
             Map.setZoom(18);   
         }
     }
     
-    getSummary(stopID);
+    Sidebar.getSummary(stopID);
 });
 
 $('#submitRouteByID').click(function() {
-    getTrips($('#stopID').val(), $('#routeNo').val());
+    Sidebar.getTrips($('#stopID').val(), $('#routeNo').val());
 });
 
 /* Register each input field so that 'Enter' presses within the input field 
@@ -102,39 +148,6 @@ function registerEnterPress(inputID, buttonID) {
             $(buttonID).click();
         }
     });
-}
-
-/* Displays an array of strings as a series of divs under the given DOM ID
- * If clickable is true, then a function is bound to each div that retrieves 
- * the appropriate trips when clicked */
-function displayResults (array, id, clickable) {
-    var results = document.getElementById(id);
-
-    deleteChildrenById(id);
-    results.innerHTML = '<b>Results</b>';
-    
-    var handleMouseOver = function () { this.style.background = '#FFFEBF'; };
-    var handleMouseOut  = function () { this.style.background = '#FFF'; }; 
-
-    for (var i = 0, j = array.length; i < j; ++i) {
-        var div = document.createElement('div');
-        div.innerHTML += array[i];
-        div.className = 'result';
-
-        // Handle mouse events
-        div.onmouseover = handleMouseOver;
-        div.onmouseout  = handleMouseOut;
-        if (clickable) bindClick(div, array[i]);
-
-        results.appendChild(div);
-    }
-
-    function bindClick (div, string) {
-        div.onclick = function () {
-            var routeNo = parseInt(string);
-            getTrips($('#stopID').val(), routeNo);
-        };
-    }
 }
 
 /* Helper function that deletes all children nodes under some DOM node */

@@ -83,6 +83,21 @@ var Map = (function (Map) {
             Map.stopMarkers[i].setMap(map);
     };
     
+    Map.toggleStopMarker = function (byIndex, id, status) {
+        var map = status ? Map.map_canvas : null;
+        if (byIndex) {
+            Map.stopMarkers[id].setMap(map);
+            return;
+        }
+        
+        for (var i = 0, j = stops.length; i < j; ++i) {
+            if (id === stops[i]['stop_code']) {
+                Map.stopMarkers[i].setMap(map);
+                return;
+            }
+        }
+    };
+    
     Map.stopMarkersOn = function () {
         return Map.stopMarkers[0].getMap();
     };
