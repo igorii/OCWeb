@@ -1,3 +1,4 @@
+/* Responsible for retrieving the next trips for a given stop from the server */
 function getTrips (stopID, routeNo) {
     $.post('/getTrips', { stopID: stopID, routeNo: routeNo }).done(function(result) {
         var str;
@@ -6,6 +7,17 @@ function getTrips (stopID, routeNo) {
         // Parse results into js
         result = JSON.parse(result);
         var trips = result['Trips'][0]['Trip'];
+        var bus = {
+            lat: trips[0]['Latitude'][0],
+            lng: trips[0]['Longitude'][0]
+        };
+        
+        // Draw a marker at the current location of the bus, and pan to that
+        // location
+        if (bus.lat && bus.lng) {
+            Map.addMarker(bus.lat, bus.lng, "BUS", "THIS IS THE BUS", null);
+            Map.setCenter(bus.lat, bus.lng);
+        }
 
         // Format stops into html
         for (var i = 0; i < trips.length; ++i) {
@@ -25,10 +37,15 @@ function getTrips (stopID, routeNo) {
     });
 }
 
+/* Responsible for retrieving the busses that stop at a given stop from the
+ * server */
 function getSummary (stopID) {
     $.post('/getSummary', { stopID: stopID }).done(function(result) {
         var str;
         var results = [];
+        
+        // Clear results from previous stop
+        deleteChildrenById('routeResults');
 
         // Parse results into js
         result = JSON.parse(result);
@@ -55,13 +72,15 @@ function getSummary (stopID) {
     });
 }
 
+/* Handle input */
+
 $('#submitStopByID').click(function() {
     var stopID = $('#stopID').val();
     
     for (var i = 0, j = stops.length; i < j; ++i) {
         if (stopID === stops[i]['stop_code']) {
-            map.setCenter(stops[i]['stop_lat'], stops[i]['stop_lon']);
-            map.setZoom(18);   
+            Map.setCenter(stops[i]['stop_lat'], stops[i]['stop_lon']);
+            Map.setZoom(18);   
         }
     }
     
@@ -72,6 +91,22 @@ $('#submitRouteByID').click(function() {
     getTrips($('#stopID').val(), $('#routeNo').val());
 });
 
+/* Register each input field so that 'Enter' presses within the input field 
+ * trigger the appropriate button handler */
+registerEnterPress('#stopID', '#submitStopByID');
+registerEnterPress('#routeNo', '#submitRouteByID');
+
+function registerEnterPress(inputID, buttonID) {
+    $(inputID).keyup(function (event) {
+        if(event.keyCode == 13) {
+            $(buttonID).click();
+        }
+    });
+}
+
+/* Displays an array of strings as a series of divs under the given DOM ID
+ * If clickable is true, then a function is bound to each div that retrieves 
+ * the appropriate trips when clicked */
 function displayResults (array, id, clickable) {
     var results = document.getElementById(id);
 
@@ -102,6 +137,7 @@ function displayResults (array, id, clickable) {
     }
 }
 
+/* Helper function that deletes all children nodes under some DOM node */
 function deleteChildrenById (id) {
     var node = document.getElementById(id);
 
