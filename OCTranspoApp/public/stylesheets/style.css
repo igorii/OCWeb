@@ -41,6 +41,16 @@ h1 {
     padding-left: 20px;
 }
 
+#floatingCtrl {
+    position: absolute;
+    background-color: rgba(255,255,255,0.7);
+    border-radius: 5px;
+    width: auto;
+    height: auto;
+    padding: 10px;
+    text-align: center;
+}
+
 .result {
     /*padding-bottom: 5px;
     padding-top: 5px;*/
