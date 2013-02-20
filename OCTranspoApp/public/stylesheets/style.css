@@ -15,18 +15,34 @@ html {
     margin: 0;
 }
 
+h1 {
+    text-align: center;
+}
+
 #map_canvas {
     float: right;
     width: auto;
+    positioin: fixed;
+    bottom: 0;
+    border-left: thick solid #E8940C;
 }
 
 #sidebar {
     float: left;
-    width: 255px;
+    width: 355px;
     padding: 10px;
 }
 
+#buttonCtrl {
+    text-align: center;
+}
+
+#sidebarContent {
+    padding-left: 20px;
+}
+
 .result {
-    padding-bottom: 10px;
-    padding-top: 10px;
+    /*padding-bottom: 5px;
+    padding-top: 5px;*/
+    padding: 5px 5px;
 }

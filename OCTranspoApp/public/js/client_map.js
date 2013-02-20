@@ -7,7 +7,7 @@ var Map = (function (Map) {
     Map.initialize = function () {        
         // Set canvas size
         $('#map_canvas').css({
-            width: $(window).width() - 300,
+            width: $(window).width() - 400,
             height: $(window).height()
         });
 
@@ -76,3 +76,6 @@ var Map = (function (Map) {
 }(Map || {}));
 
 google.maps.event.addDomListener(window, 'load', Map.initialize);
+$(window).resize(function () {
+    Map.initialize();
+});
