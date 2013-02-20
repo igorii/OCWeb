@@ -144,3 +144,12 @@ function deleteChildrenById (id) {
     while (node.hasChildNodes())
         node.removeChild(node.lastChild);
 }
+
+// Make the map canvas stay in a fixed position
+// This will need to be improved so that rapid scrolling does not make the
+// map_canvas twitch
+$(window).scroll(function () {
+    $('#map_canvas').css({
+        top: window.scrollY + 'px'
+    });
+});

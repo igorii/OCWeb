@@ -1,16 +1,29 @@
 div#sidebar
     h1 OC Transpo App
     br
-    p Get route summary for stop
-    input(type='text', id='stopID')
-    button(id='submitStopByID') Go
+    div#buttonCtrl
+        button(class='btn', title='Get trips for a single route') 
+            span(class='icon-arrow-down')
+        button(class='btn', title='Get transit directions')
+            span(class='icon-road')
+        button(class='btn', title='Check the full schedule for a route')
+            span(class='icon-list-alt')
+        button(class='btn', title='Access user information')
+            span(class='icon-user')
     br
     br
-    p Get trips for route
-    input(type='text', id='routeNo')
-    button(id='submitRouteByID') Go
-    script(src='/js/sidebar.js')
-    br
-    br
-    div#summaryResults
-    div#routeResults
+    div#sidebarContent
+        h5 Get route summary for stop
+        div.input-append
+            input(type='text', id='stopID', class='sidebarText')
+            button(id='submitStopByID', class='btn') Go
+        //br
+        //h5 Get trips for route
+        //div.input-append
+        //    input(type='text', id='routeNo', class='sidebarText')
+        //    button(id='submitRouteByID', class='btn') Go
+        script(src='/js/sidebar.js')
+        br
+        div#summaryResults
+        br
+        div#routeResults
