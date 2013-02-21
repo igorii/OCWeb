@@ -1,12 +1,14 @@
 var Sidebar = (function (Sidebar) {
     
     Sidebar.lastRoute = null;
+    Sidebar.lastRouteMarker = null;
     
     /* Responsible for retrieving the next trips for a given stop from the server */
     Sidebar.getTrips = function (stopID, routeNo) {
         $.post('/getTrips', { stopID: stopID, routeNo: routeNo }).done(function(result) {
             var str;
             var results = [];
+            var bounds = [];
     
             // Parse results into js
             result = JSON.parse(result);
@@ -19,9 +21,16 @@ var Sidebar = (function (Sidebar) {
             // Draw a marker at the current location of the bus, and pan to that
             // location
             if (bus.lat && bus.lng) {
-                Map.addMarker(bus.lat, bus.lng, "BUS", "THIS IS THE BUS", null);
-                Map.setCenter(bus.lat, bus.lng);
+                var marker = Map.addMarker(bus.lat, bus.lng, 
+                                 "BUS", 
+                                 "THIS IS THE BUS", 
+                                 true, null);
+                //Map.setCenter(bus.lat, bus.lng);
+                bounds.push(marker);
+                bounds.push(Sidebar.lastRouteMarker);
             }
+            
+            Map.zoomToMarkers(bounds);
     
             // Format stops into html
             for (var i = 0; i < trips.length; ++i) {
@@ -118,18 +127,20 @@ var Sidebar = (function (Sidebar) {
 
 $('#submitStopByID').click(function() {
     var stopID = $('#stopID').val();
+    var marker;
     
     if (Sidebar.lastRoute && !Map.stopMarkersOn())
         Map.toggleStopMarker(false, Sidebar.lastRoute, false);
     
     for (var i = 0, j = stops.length; i < j; ++i) {
         if (stopID === stops[i]['stop_code']) {
-            Map.toggleStopMarker(true, i, true);
+            marker = Map.toggleStopMarker(true, i, true);
             Map.setCenter(stops[i]['stop_lat'], stops[i]['stop_lon']);
             Map.setZoom(18);   
         }
     }
     
+    Sidebar.lastRouteMarker = marker;
     Sidebar.getSummary(stopID);
 });
 

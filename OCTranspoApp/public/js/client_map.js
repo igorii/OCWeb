@@ -59,7 +59,7 @@ var Map = (function (Map) {
         return Map;
     };
     
-    Map.addMarker = function (lat, lng, title, content, img) {
+    Map.addMarker = function (lat, lng, title, content, openNow, img) {
         var infowindow = new google.maps.InfoWindow({ content: 'incoming...' });
         var marker = new google.maps.Marker({
             position: new google.maps.LatLng(lat, lng),
@@ -71,6 +71,13 @@ var Map = (function (Map) {
            infowindow.setContent(content);
            infowindow.open(Map.map_canvas, marker);
         });
+        
+        if (openNow) {
+            infowindow.setContent(content);
+            infowindow.open(Map.map_canvas, marker);
+        }
+        
+        return marker;
     };
     
     Map.toggleStopMarkers = function (show) {
@@ -85,21 +92,34 @@ var Map = (function (Map) {
     
     Map.toggleStopMarker = function (byIndex, id, status) {
         var map = status ? Map.map_canvas : null;
+        var marker;
+        
         if (byIndex) {
-            Map.stopMarkers[id].setMap(map);
-            return;
+            marker = Map.stopMarkers[id];
+            marker.setMap(map);
+            return marker;
         }
         
         for (var i = 0, j = stops.length; i < j; ++i) {
             if (id === stops[i]['stop_code']) {
-                Map.stopMarkers[i].setMap(map);
-                return;
+                marker = Map.stopMarkers[i];
+                marker.setMap(map);
+                return marker;
             }
         }
     };
     
     Map.stopMarkersOn = function () {
         return Map.stopMarkers[0].getMap();
+    };
+    
+    Map.zoomToMarkers = function (markers) {
+        var bounds = new google.maps.LatLngBounds();
+        for (var i = 0; i < markers.length; ++i) {
+            bounds.extend(new google.maps.LatLng(markers[i].position.lat(),
+                                markers[i].position.lng()));
+        }
+        Map.map_canvas.fitBounds(bounds);
     };
 
     return Map;
