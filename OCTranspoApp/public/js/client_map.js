@@ -72,12 +72,20 @@ var Map = (function (Map) {
            infowindow.open(Map.map_canvas, marker);
         });
         
+        // If true, immediately open the infowindow
         if (openNow) {
             infowindow.setContent(content);
             infowindow.open(Map.map_canvas, marker);
         }
         
         return marker;
+    };
+    
+    Map.deleteCustomMarkers = function () {
+        for (var i = 0; i < Map.customMarkers.length; ++i) {
+            Map.customMarkers[i].setMap(null);
+        }
+        Map.customMarkers.length = 0; // Remove references to all custom markers
     };
     
     Map.toggleStopMarkers = function (show) {
@@ -126,6 +134,16 @@ var Map = (function (Map) {
 }(Map || {}));
 
 google.maps.event.addDomListener(window, 'load', Map.initialize);
+
 $(window).resize(function () {
     Map.initialize();
+});
+
+// Make the map canvas stay in a fixed position
+// This will need to be improved so that rapid scrolling does not make the
+// map_canvas twitch
+$(window).scroll(function () {
+    $('#map_canvas').css({
+        top: window.scrollY + 'px'
+    });
 });

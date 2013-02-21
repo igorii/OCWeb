@@ -1,6 +1,7 @@
 var Sidebar = (function (Sidebar) {
     
-    Sidebar.lastRoute = null;
+    Sidebar.lastRoute       = null;
+    Sidebar.lastBusMarker   = null;
     Sidebar.lastRouteMarker = null;
     
     /* Responsible for retrieving the next trips for a given stop from the server */
@@ -9,9 +10,23 @@ var Sidebar = (function (Sidebar) {
             var str;
             var results = [];
             var bounds = [];
-    
+            
+            deleteChildrenById('routeResults');
+            
+            if (Sidebar.lastBusMarker) {
+                Map.deleteCustomMarkers();
+                Sidebar.lastBusMarker = null;
+            }
+
             // Parse results into js
             result = JSON.parse(result);
+            
+            // If no trips are found for route, alert and return
+            if (result['Trips'][0]['Trip'] === undefined) {
+                alert('No trips for route ' + result['RouteNo']);
+                return;
+            }
+                
             var trips = result['Trips'][0]['Trip'];
             var bus = {
                 lat: trips[0]['Latitude'][0],
@@ -25,13 +40,15 @@ var Sidebar = (function (Sidebar) {
                                  "BUS", 
                                  "THIS IS THE BUS", 
                                  true, null);
-                //Map.setCenter(bus.lat, bus.lng);
+                Sidebar.lastBusMarker = marker;
                 bounds.push(marker);
                 bounds.push(Sidebar.lastRouteMarker);
+                
+                // Check whether magic google maps position variables are set
+                if (bounds[0].position.hb && bounds[1].position.hb)
+                    Map.zoomToMarkers(bounds);
             }
             
-            Map.zoomToMarkers(bounds);
-    
             // Format stops into html
             for (var i = 0; i < trips.length; ++i) {
                 str = '';
@@ -46,7 +63,10 @@ var Sidebar = (function (Sidebar) {
             }
     
             // Display stops as individual divs
-            displayResults(results, 'routeResults', false);
+            displayResults(results, 'routeResults', false, 'Next Trips');
+            
+            // Scroll down to the results
+            $('body').animate({ scrollTop: $('#routeResults').position().top });
         });    
     };
     
@@ -72,7 +92,6 @@ var Sidebar = (function (Sidebar) {
             }
     
             // Get route information
-            var routes = result['Routes'][0]['Route'];
             for (var i = 0; i < routes.length; ++i) {
                 str = '';
                 str += routes[i].RouteNo[0] + ' ';
@@ -82,18 +101,18 @@ var Sidebar = (function (Sidebar) {
             }
             
             Sidebar.lastRoute = stopID;
-            displayResults(results, 'summaryResults', true);
+            displayResults(results, 'summaryResults', true, 'Summary of Stop');
         });        
     };
     
     /* Displays an array of strings as a series of divs under the given DOM ID
      * If clickable is true, then a function is bound to each div that retrieves 
      * the appropriate trips when clicked */
-    function displayResults (array, id, clickable) {
+    function displayResults (array, id, clickable, title) {
         var results = document.getElementById(id);
     
         deleteChildrenById(id);
-        results.innerHTML = '<b>Results</b>';
+        results.innerHTML = '<b>' + title + '</b>';
         
         var handleMouseOver = function () { this.style.background = '#FFFEBF'; };
         var handleMouseOut  = function () { this.style.background = '#FFF'; }; 
@@ -168,12 +187,3 @@ function deleteChildrenById (id) {
     while (node.hasChildNodes())
         node.removeChild(node.lastChild);
 }
-
-// Make the map canvas stay in a fixed position
-// This will need to be improved so that rapid scrolling does not make the
-// map_canvas twitch
-$(window).scroll(function () {
-    $('#map_canvas').css({
-        top: window.scrollY + 'px'
-    });
-});

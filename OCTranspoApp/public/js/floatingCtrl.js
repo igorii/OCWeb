@@ -12,7 +12,7 @@ var FloatingCtrl = (function (FloatingCtrl) {
         };
         FloatingCtrl.div.css({
             left: ($window.innerWidth() - FloatingCtrl.div.innerWidth() - padding.right) + 'px',
-            top: ($window.innerHeight() - FloatingCtrl.div.innerHeight() - padding.bottom) + 'px'
+            top: (window.scrollY + $window.innerHeight() - FloatingCtrl.div.innerHeight() - padding.bottom) + 'px'
         });
     }
     
@@ -35,4 +35,9 @@ $('#showStops').click(function () {
         btnText = 'Hide Stops';
 
     $('#showStops').text(btnText);
+});
+
+$(window).scroll(function () {
+    console.log('Changing floating ctrl');
+    FloatingCtrl.reposition();
 });
