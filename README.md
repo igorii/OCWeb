@@ -30,13 +30,13 @@ Other features such as displaying traffic irregularities, bus types, bus fares, 
 Milestones
 ----------
 
-**February 4**
+~~**February 4**~~
 *Architecture diagram and external library/program use*
 * Outline use of external libraries such as OC Transpo Developer API, Google Maps V3 MongoDB, etc
 * Outline interactions between technologies used
 * Provide architecture diagram of web application
 
-**February 11**
+~~**February 11**~~
 *Node.js backend implementation*
 * Implement ability to communicate with OC Transpo
 * Implement ability to service GET requests for documents
