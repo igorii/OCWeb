@@ -34,7 +34,6 @@ app.get('/users', user.list);
 app.post('/getSummary', map.getSummary);
 app.post('/getTrips', map.getTrips);
 app.post('/getAllStopsFromDb', database.getAllStops);
-app.post('/getSingleStopFromDb', database.getSingleStop);
 
 http.createServer(app).listen(app.get('port'), function(){
     console.log("Express server listening on port " + app.get('port'));
