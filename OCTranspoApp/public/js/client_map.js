@@ -1,5 +1,5 @@
 var Map = (function (Map) {
-    
+
     Map.map_canvas = null;
     Map.stopMarkers = [];
     Map.customMarkers = [];
@@ -21,7 +21,7 @@ var Map = (function (Map) {
                 map: null
             }));
 
-            bindInfoWindow(Map.stopMarkers[i], Map.map_canvas, infowindow, 
+            bindInfoWindow(Map.stopMarkers[i], Map.map_canvas, infowindow,
                            Map.stopMarkers[i].title);
         }
 
@@ -39,7 +39,7 @@ var Map = (function (Map) {
     }
 
     // Initialize to a view of Ottawa in general
-    Map.initialize = function () {        
+    Map.initialize = function () {
         // Set canvas size
         $('#map_canvas').css({
             width: $(window).width() - 400,
@@ -56,21 +56,21 @@ var Map = (function (Map) {
         // Create the map
         Map.map_canvas = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
 
-        
-        
+
+
     };
-    
+
     Map.setCenter = function (lat, lng) {
         var latlng = new google.maps.LatLng(lat, lng);
         Map.map_canvas.setCenter(latlng);
         return Map;
     };
-    
+
     Map.setZoom = function (zoom) {
         Map.map_canvas.setZoom(zoom);
         return Map;
     };
-    
+
     Map.addMarker = function (lat, lng, title, content, openNow, img) {
         var infowindow = new google.maps.InfoWindow({ content: 'incoming...' });
         var marker = new google.maps.Marker({
@@ -83,56 +83,56 @@ var Map = (function (Map) {
            infowindow.setContent(content);
            infowindow.open(Map.map_canvas, marker);
         });
-        
+
         // If true, immediately open the infowindow
         if (openNow) {
             infowindow.setContent(content);
             infowindow.open(Map.map_canvas, marker);
         }
-        
+
         return marker;
     };
-    
+
     Map.deleteCustomMarkers = function () {
         for (var i = 0; i < Map.customMarkers.length; ++i) {
             Map.customMarkers[i].setMap(null);
         }
         Map.customMarkers.length = 0; // Remove references to all custom markers
     };
-    
+
     Map.toggleStopMarkers = function (show) {
         var map = null;
-        
-        if (show) 
+
+        if (show)
             map = Map.map_canvas;
 
         for (var i = 0, j = Map.stopMarkers.length; i < j; ++i)
             Map.stopMarkers[i].setMap(map);
     };
-    
+
     Map.toggleStopMarker = function (byIndex, id, status) {
         var map = status ? Map.map_canvas : null;
         var marker;
-        
+
         if (byIndex) {
             marker = Map.stopMarkers[id];
             marker.setMap(map);
             return marker;
         }
-        
-        for (var i = 0, j = stops.length; i < j; ++i) {
-            if (id === stops[i]['stop_code']) {
+
+        for (var i = 0, j = Map.allStops.length; i < j; ++i) {
+            if (id === Map.allStops[i]['stop_code']) {
                 marker = Map.stopMarkers[i];
                 marker.setMap(map);
                 return marker;
             }
         }
     };
-    
+
     Map.stopMarkersOn = function () {
-        return Map.stopMarkers[0].getMap();
+        return !!Map.stopMarkers[0].getMap();
     };
-    
+
     Map.zoomToMarkers = function (markers) {
         var bounds = new google.maps.LatLngBounds();
         for (var i = 0; i < markers.length; ++i) {
@@ -163,6 +163,5 @@ $(window).scroll(function () {
 $(document).ready( function() {
     $.post('/getAllStopsFromDb', {}).done( function(result) {
         Map.initializeStopMarkers(result);
-        Map.allStops = result;
     });
 });
