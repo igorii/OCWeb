@@ -151,10 +151,10 @@ $('#submitStopByID').click(function() {
     if (Sidebar.lastRoute && !Map.stopMarkersOn())
         Map.toggleStopMarker(false, Sidebar.lastRoute, false);
     
-    for (var i = 0, j = stops.length; i < j; ++i) {
-        if (stopID === stops[i]['stop_code']) {
+    for (var i = 0, j = Map.allStops.length; i < j; ++i) {
+        if (stopID === Map.allStops[i]['stop_code']) {
             marker = Map.toggleStopMarker(true, i, true);
-            Map.setCenter(stops[i]['stop_lat'], stops[i]['stop_lon']);
+            Map.setCenter(Map.allStops[i]['stop_lat'], Map.allStops[i]['stop_lon']);
             Map.setZoom(18);   
         }
     }

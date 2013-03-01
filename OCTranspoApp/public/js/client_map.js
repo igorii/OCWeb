@@ -159,3 +159,10 @@ $(window).scroll(function () {
         top: window.scrollY + 'px'
     });
 });
+
+$(document).ready( function() {
+    $.post('/getAllStopsFromDb', {}).done( function(result) {
+        Map.initializeStopMarkers(result);
+        Map.allStops = result;
+    });
+});
