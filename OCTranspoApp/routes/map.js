@@ -19,7 +19,7 @@
                 title: 'OCTranspo App',
                 layout: 'layout-mobile'
             });
-        } else {
+        } else {            
             res.render('home', {
                 title: 'OCTranspo App'
             });

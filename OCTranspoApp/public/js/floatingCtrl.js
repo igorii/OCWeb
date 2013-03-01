@@ -25,16 +25,26 @@ $(document).ready(FloatingCtrl.init);
 
 // Register Show/Hide stop markers button click handler
 $('#showStops').click(function () {
-    var shown   = Map.stopMarkersOn();
-    var btnText = '';
+    if (Map.allStops === null) {
+        $.post('/getAllStopsFromDb', {}).done( function(result) {
+            Map.initializeStopMarkers(result);
+            afterAction();     
+        });
+    } else {
+        afterAction();
+    }
 
-    Map.toggleStopMarkers(!shown);
-    if (shown)
-        btnText = 'Show Stops';
-    else
-        btnText = 'Hide Stops';
+    function afterAction() {
+        var shown   = Map.stopMarkersOn();
+        var btnText = '';
+        Map.toggleStopMarkers(!shown);
+        if (shown)
+            btnText = 'Show Stops';
+        else
+            btnText = 'Hide Stops';
 
-    $('#showStops').text(btnText);
+        $('#showStops').text(btnText);
+    }
 });
 
 $(window).scroll(function () {

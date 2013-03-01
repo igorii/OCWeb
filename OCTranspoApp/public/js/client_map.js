@@ -3,24 +3,14 @@ var Map = (function (Map) {
     Map.map_canvas = null;
     Map.stopMarkers = [];
     Map.customMarkers = [];
+    Map.allStops = null;
 
-    // Initialize to a view of Ottawa in general
-    Map.initialize = function () {        
-        // Set canvas size
-        $('#map_canvas').css({
-            width: $(window).width() - 400,
-            height: $(window).height()
-        });
+    Map.initializeStopMarkers = function(stops) {
+        if (Map.allStops !== null) {
+            return;
+        }
 
-        // Set the map options
-        var mapOptions = {
-            zoom: 16,
-            center: new google.maps.LatLng(45.415804, -75.700607),
-            mapTypeId: google.maps.MapTypeId.ROADMAP
-        };
-
-        // Create the map
-        Map.map_canvas = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
+        Map.allStops = stops;
 
         // Draw every bus stop (temporary)
         var infowindow = new google.maps.InfoWindow({ content: 'incoming...' });
@@ -46,6 +36,28 @@ var Map = (function (Map) {
                 infowindow.open(map, marker);
             });
         }
+    }
+
+    // Initialize to a view of Ottawa in general
+    Map.initialize = function () {        
+        // Set canvas size
+        $('#map_canvas').css({
+            width: $(window).width() - 400,
+            height: $(window).height()
+        });
+
+        // Set the map options
+        var mapOptions = {
+            zoom: 16,
+            center: new google.maps.LatLng(45.415804, -75.700607),
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+
+        // Create the map
+        Map.map_canvas = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
+
+        
+        
     };
     
     Map.setCenter = function (lat, lng) {
