@@ -1,9 +1,11 @@
 var Map = (function (Map) {
 
-    Map.map_canvas = null;
-    Map.stopMarkers = [];
-    Map.customMarkers = [];
-    Map.allStops = null;
+    Map.map_canvas         = null;
+    Map.stopMarkers        = [];
+    Map.customMarkers      = [];
+    Map.allStops           = null;
+    Map.directionsService  = new google.maps.DirectionsService();
+    Map.directionsRenderer = new google.maps.DirectionsRenderer();
 
     Map.initializeStopMarkers = function(stops) {
         if (Map.allStops !== null) {
@@ -55,9 +57,7 @@ var Map = (function (Map) {
 
         // Create the map
         Map.map_canvas = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
-
-
-
+        Map.directionsRenderer.setMap(Map.map_canvas);
     };
 
     Map.setCenter = function (lat, lng) {

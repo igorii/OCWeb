@@ -3,6 +3,55 @@ var Sidebar = (function (Sidebar) {
     Sidebar.lastRoute       = null;
     Sidebar.lastBusMarker   = null;
     Sidebar.lastRouteMarker = null;
+    Sidebar.modes = {  SUMMARY:0, DIRECTIONS:1, SCHEDULE:2, USER:3  };
+    Sidebar.currMode = Sidebar.modes.SUMMARY;
+
+    Sidebar.switchMode = function(newMode) {
+        if (newMode === Sidebar.currMode) return;
+
+        var oldContent, newContent;
+
+        // Get the previous div and hide it
+        switch (Sidebar.currMode) {
+            case Sidebar.modes.SUMMARY:
+                oldContent = $('#stopSummaryContent');
+                break;
+            case Sidebar.modes.DIRECTIONS:
+                oldContent = $('#directionsContent');
+                break;
+            case Sidebar.modes.SCHEDULE:
+                oldContent = $('#scheduleContent');
+                break;
+            case Sidebar.modes.USER:
+                oldContent = $('#userContent');
+                break;
+        }
+
+        // Get the new div and show it and set the new mode
+        switch (newMode) {
+            case Sidebar.modes.SUMMARY:
+                newContent = $('#stopSummaryContent');
+                Sidebar.currMode = Sidebar.modes.SUMMARY;
+                break;
+            case Sidebar.modes.DIRECTIONS:
+                newContent = $('#directionsContent');
+                Sidebar.currMode = Sidebar.modes.DIRECTIONS;
+                break;
+            case Sidebar.modes.SCHEDULE:
+                newContent = $('#scheduleContent');
+                Sidebar.currMode = Sidebar.modes.SCHEDULE;
+                break;
+            case Sidebar.modes.USER:
+                newContent = $('#userContent');
+                Sidebar.currMode = Sidebar.modes.USER;
+                break;
+        }
+
+        oldContent.css({visibility:'hidden'});
+        newContent.css({visibility:'visible'});
+
+        return newContent;
+    }
 
     /* Responsible for retrieving the next trips for a given stop from the server */
     Sidebar.getTrips = function (stopID, routeNo) {
@@ -144,6 +193,7 @@ var Sidebar = (function (Sidebar) {
 
 /* Handle input */
 
+/*   Summary Mode */
 $('#submitStopByID').click(function() {
     var stopID = $('#stopID').val();
     var marker;
@@ -168,6 +218,22 @@ $('#submitStopByID').click(function() {
 $('#submitRouteByID').click(function() {
     Sidebar.getTrips($('#stopID').val(), $('#routeNo').val());
 });
+
+/*    Directions Mode */
+$('#getDirections').click(function() {
+    var to   = $('#directionsTo').val();
+    var from = $('#directionsFrom').val();
+    var request = {
+        origin: from,
+        destination: to,
+        travelMode: google.maps.TravelMode.TRANSIT
+    }
+    Map.directionsService.route(request, function (result, status) {
+        Map.directionsRenderer.setDirections(result);(result);
+    });
+});
+
+
 
 /* Register each input field so that 'Enter' presses within the input field
  * trigger the appropriate button handler */
