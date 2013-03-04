@@ -2,28 +2,50 @@ div#sidebar
     h1 OC Transpo App
     br
     div#buttonCtrl
-        button(class='btn', title='Get trips for a single route') 
+        button(class='btn', onclick="Sidebar.switchMode(Sidebar.modes.SUMMARY)",
+            title='Get trips for a single route')
             span(class='icon-arrow-down')
-        button(class='btn', title='Get transit directions')
+        button(class='btn', onclick="Sidebar.switchMode(Sidebar.modes.DIRECTIONS)",
+            title='Get transit directions')
             span(class='icon-road')
-        button(class='btn', title='Check the full schedule for a route')
+        button(class='btn', onclick="Sidebar.switchMode(Sidebar.modes.SCHEDULE)",
+            title='Check the full schedule for a route')
             span(class='icon-list-alt')
-        button(class='btn', title='Access user information')
+        button(class='btn', onclick="Sidebar.switchMode(Sidebar.modes.USER)",
+            title='Access user information')
             span(class='icon-user')
     br
     br
     div#sidebarContent
-        h5 Get route summary for stop
-        div.input-append
-            input(type='text', id='stopID', class='sidebarText')
-            button(id='submitStopByID', class='btn') Go
-        //br
-        //h5 Get trips for route
-        //div.input-append
-        //    input(type='text', id='routeNo', class='sidebarText')
-        //    button(id='submitRouteByID', class='btn') Go
-        script(src='/js/sidebar.js')
-        br
-        div#summaryResults
-        br
-        div#routeResults
+        div#stopSummaryContent
+            h5 Get route summary for stop
+            div.input-append
+                input(type='text', id='stopID', class='sidebarText', placeholder="Stop ID…")
+                button(id='submitStopByID', class='btn') Go
+            br
+            div#summaryResults
+            br
+            div#routeResults
+
+        div#directionsContent
+            h5 Get directions
+            div.input-append
+                input(type='text', id='directionsTo', class='sidebarText', placeholder="From…")
+                br
+                input(type='text', id='directionsFrom', class='sidebarText', placeholder="To…")
+                br
+                button(id='getDirections', class='btn') Go
+            br
+            div#directionsResults
+
+        div#scheduleContent
+            h5 Schedule
+            br
+            div#scheduleResults
+
+        div#userContent
+            h5 User options
+            br
+            div#scheduleResults
+
+script(src='/js/sidebar.js')
