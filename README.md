@@ -42,7 +42,7 @@ Milestones
 * Implement ability to service GET requests for documents
 * Implement ability to service POST requests for functionality
 
-**February 25**
+~~**February 25**~~
 *Database configuration and setup*
 * Setup persistent store
 * Import bus schedules from OC Transpo provided .csv
