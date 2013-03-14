@@ -150,7 +150,9 @@ var Sidebar = (function (Sidebar) {
             }
 
             Sidebar.lastRoute = stopID;
-            displayResults(results, 'summaryResults', true, 'Summary of Stop');
+            console.log(result);
+            displayResults(results, 'summaryResults', true,
+                'Summary of <em>' + toTitleCase(result['StopDescription'][0]['_']) + '</em>');
         });
     };
 
@@ -187,34 +189,85 @@ var Sidebar = (function (Sidebar) {
         }
     }
 
+    Sidebar.submitStop = function(newQuery) {
+        var stopID = $('#stopID').val();
+        var marker;
+
+        if (newQuery)
+            deleteChildrenById('stopMatchResults');
+        deleteChildrenById('summaryResults');
+        deleteChildrenById('routeResults');
+
+        var reg = /^[0-9]?[0-9][0-9][0-9]$/;
+        var number = reg.test(stopID);
+
+        // If the text in the StopID field is not a stop number, look for all stops
+        // that match the string entered by name
+        if (!number) {
+            stopID = stopID.toUpperCase();
+            var matchingStops = [];
+
+            for (var i = 0, j = Map.allStops.length; i < j; ++i) {
+                if (Map.allStops[i]['stop_name'].match(stopID)) {
+                    matchingStops.push(Map.allStops[i]);
+                }
+            }
+
+            displayMatches(matchingStops);
+            return;
+        }
+
+        if (Sidebar.lastRoute && !Map.stopMarkersOn())
+            Map.toggleStopMarker(false, Sidebar.lastRoute, false);
+
+        for (var i = 0, j = Map.allStops.length; i < j; ++i) {
+            if (stopID === Map.allStops[i]['stop_code']) {
+                marker = Map.toggleStopMarker(true, i, true);
+                Map.setCenter(Map.allStops[i]['stop_lat'], Map.allStops[i]['stop_lon']);
+                Map.setZoom(18);
+            }
+        }
+
+        Sidebar.lastRouteMarker = marker;
+        Sidebar.getSummary(stopID);
+
+        function displayMatches (array) {
+            var results = document.getElementById('stopMatchResults');
+
+            deleteChildrenById('stopMatchResults');
+            results.innerHTML = '<b>Stop Matches</b>';
+
+            var handleMouseOver = function () { this.style.background = '#FFFEBF'; };
+            var handleMouseOut  = function () { this.style.background = '#FFF'; };
+
+            for (var i = 0, j = array.length; i < j; ++i) {
+                var div = document.createElement('div');
+                div.innerHTML += array[i]['stop_name'];
+                div.className = 'result';
+
+                // Handle mouse events
+                div.onmouseover = handleMouseOver;
+                div.onmouseout  = handleMouseOut;
+                bindClick(div, array[i]);
+                results.appendChild(div);
+            }
+
+            function bindClick (div, stop) {
+                div.onclick = function () {
+                    $('#stopID').val(stop['stop_code']);
+                    Sidebar.submitStop(false);
+                };
+            }
+        }
+    }
+
     return Sidebar;
 }(Sidebar || {}));
 
 
 /* Handle input */
 
-/*   Summary Mode */
-$('#submitStopByID').click(function() {
-    var stopID = $('#stopID').val();
-    var marker;
-
-    if (Sidebar.lastRoute && !Map.stopMarkersOn())
-        Map.toggleStopMarker(false, Sidebar.lastRoute, false);
-
-    for (var i = 0, j = Map.allStops.length; i < j; ++i) {
-        if (parseInt(stopID) === Map.allStops[i]['stop_code']) {
-            marker = Map.toggleStopMarker(true, i, true);
-            Map.setCenter(Map.allStops[i]['stop_lat'], Map.allStops[i]['stop_lon']);
-            Map.setZoom(18);
-        }
-    }
-
-    console.log(marker);
-
-    Sidebar.lastRouteMarker = marker;
-    Sidebar.getSummary(stopID);
-});
-
+$('#submitStopByID').click(Sidebar.submitStop);
 $('#submitRouteByID').click(function() {
     Sidebar.getTrips($('#stopID').val(), $('#routeNo').val());
 });
@@ -254,4 +307,10 @@ function deleteChildrenById (id) {
 
     while (node.hasChildNodes())
         node.removeChild(node.lastChild);
+}
+
+// Convenience function for turing strings into title case
+function toTitleCase(str)
+{
+    return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
 }
