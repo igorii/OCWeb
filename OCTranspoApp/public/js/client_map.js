@@ -44,7 +44,7 @@ var Map = (function (Map) {
     Map.initialize = function () {
         // Set canvas size
         $('#map_canvas').css({
-            width: $(window).width() - 400,
+            width: $(window).width() - 425,
             height: $(window).height()
         });
 

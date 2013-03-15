@@ -1,0 +1,25 @@
+@media handheld {
+
+	#footer {
+	    position: absolute;
+	    background-color: #222;
+	    bottom: 0px;    
+	    height: 50px;
+	    padding: 5px;
+	}
+
+	#summaryBtn {
+		float: left;
+	    background-color: #f00;
+	}
+
+	#directionsBtn {
+		float: center;
+	    background-color: #0f0;
+	}
+
+	#userBtn {
+		float: right;
+	    background-color: #00f;
+	}
+}

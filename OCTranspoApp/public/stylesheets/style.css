@@ -22,14 +22,14 @@ h1 {
 #map_canvas {
     float: right;
     width: auto;
-    positioin: fixed;
+    position: fixed;
     bottom: 0;
     border-left: thick solid #E8940C;
 }
 
 #sidebar {
     float: left;
-    width: 355px;
+    width: 380px;
     padding: 10px;
 }
 

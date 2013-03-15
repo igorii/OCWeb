@@ -3,13 +3,68 @@ var Sidebar = (function (Sidebar) {
     Sidebar.lastRoute       = null;
     Sidebar.lastBusMarker   = null;
     Sidebar.lastRouteMarker = null;
-    Sidebar.modes = {  SUMMARY:0, DIRECTIONS:1, SCHEDULE:2, USER:3  };
+    Sidebar.modes = {  SUMMARY:0, DIRECTIONS:1, USER:2 };
     Sidebar.currMode = Sidebar.modes.SUMMARY;
+
+    Sidebar.createSecondary = function() {
+
+        if (document.getElementById('sidebar2') !== null)
+            return;
+
+        var sideBar2 = document.createElement('div');
+        sideBar2.id = 'sidebar2';
+        $(sideBar2).css( {
+            left: 390 + 'px',
+            position: 'absolute',
+            height: 100 + '%',
+            'background-color': '#fff',
+            width: 0 + 'px'
+        });
+
+        var results = document.createElement('div');
+        results.id = 'stopMatchResults';
+        $(results).css ({
+            top: document.getElementById('sidebarContent').offsetTop +
+                 document.getElementById('summaryResults').offsetTop + 'px',
+            position: 'absolute'
+        });
+        sideBar2.appendChild(results);
+        document.getElementById('container').appendChild(sideBar2);
+
+        $('#map_canvas').animate({ width: document.getElementById('map_canvas').clientWidth - 300 + 'px'});
+        $(sideBar2).animate({ width: 300 + 'px' });
+        
+    }
+
+    Sidebar.removeSecondary = function ()
+    {
+        if (document.getElementById('sidebar2') === null)
+            return;
+
+        $('#sidebar2').animate({ width: 0 + 'px' }, 400, 'swing', function() {
+            deleteChildrenById('stopMatchResults');
+            deleteChildrenById('sidebar2');
+            document.getElementById('container').removeChild(document.getElementById('sidebar2'));
+        });     
+        $('#map_canvas').animate({ width: document.getElementById('map_canvas').clientWidth + 300 + 'px'});   
+    }
+
+    Sidebar.repositionSidebarSecondary = function() {
+
+        var sidebar2;
+        if ((sidebar2 = document.getElementById('sidebar2')) === null)
+            return;
+
+        $(sidebar2).css({
+            top: window.scroll + 'px'
+        });
+    }
 
     Sidebar.switchMode = function(newMode) {
         if (newMode === Sidebar.currMode) return;
 
         var oldContent, newContent;
+        Sidebar.removeSecondary();
 
         // Get the previous div and hide it
         switch (Sidebar.currMode) {
@@ -18,9 +73,6 @@ var Sidebar = (function (Sidebar) {
                 break;
             case Sidebar.modes.DIRECTIONS:
                 oldContent = $('#directionsContent');
-                break;
-            case Sidebar.modes.SCHEDULE:
-                oldContent = $('#scheduleContent');
                 break;
             case Sidebar.modes.USER:
                 oldContent = $('#userContent');
@@ -36,10 +88,6 @@ var Sidebar = (function (Sidebar) {
             case Sidebar.modes.DIRECTIONS:
                 newContent = $('#directionsContent');
                 Sidebar.currMode = Sidebar.modes.DIRECTIONS;
-                break;
-            case Sidebar.modes.SCHEDULE:
-                newContent = $('#scheduleContent');
-                Sidebar.currMode = Sidebar.modes.SCHEDULE;
                 break;
             case Sidebar.modes.USER:
                 newContent = $('#userContent');
@@ -194,7 +242,8 @@ var Sidebar = (function (Sidebar) {
         var marker;
 
         if (newQuery)
-            deleteChildrenById('stopMatchResults');
+            Sidebar.removeSecondary();
+
         deleteChildrenById('summaryResults');
         deleteChildrenById('routeResults');
 
@@ -232,6 +281,8 @@ var Sidebar = (function (Sidebar) {
         Sidebar.getSummary(stopID);
 
         function displayMatches (array) {
+
+            Sidebar.createSecondary();
             var results = document.getElementById('stopMatchResults');
 
             deleteChildrenById('stopMatchResults');
@@ -282,6 +333,19 @@ $('#getDirections').click(function() {
         travelMode: google.maps.TravelMode.TRANSIT
     }
     Map.directionsService.route(request, function (result, status) {
+        console.log(result);
+
+        switch (result['status'])
+        {
+            case 'ZERO_RESULTS':
+                document.getElementById('directionsResults').innerHTML = '<br><em>Search terms are too ambiguous.<br>Try more specific terms.</em>';
+                return;
+
+            case 'NOT_FOUND':
+                document.getElementById('directionsResults').innerHTML = '<br><em>No results found</em>';
+                return;
+        }
+
         Map.directionsRenderer.setDirections(result);(result);
     });
 });
@@ -292,6 +356,8 @@ $('#getDirections').click(function() {
  * trigger the appropriate button handler */
 registerEnterPress('#stopID', '#submitStopByID');
 registerEnterPress('#routeNo', '#submitRouteByID');
+registerEnterPress('#getDirections', '#directionsTo');
+registerEnterPress('#directionsFrom', '#getDirections');
 
 function registerEnterPress(inputID, buttonID) {
     $(inputID).keyup(function (event) {
@@ -305,6 +371,9 @@ function registerEnterPress(inputID, buttonID) {
 function deleteChildrenById (id) {
     var node = document.getElementById(id);
 
+    if (node === null)
+        return;
+
     while (node.hasChildNodes())
         node.removeChild(node.lastChild);
 }
@@ -314,3 +383,8 @@ function toTitleCase(str)
 {
     return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
 }
+
+$(window).scroll(function () {
+    console.log('Changing sidebar2 y');
+    Sidebar.repositionSidebarSecondary();
+});
