@@ -20,9 +20,10 @@ exports.getAllStops = function(req, res) {
 	});
 }
 
-exports.getSingleStop = function(req, res) {
-	StopsDb.find().toArray(function (err, result) {
-		res.json(result);
+exports.getStopPopularity = function(stopID) {
+	StopsDb.find({ stop: stopID }).toArray(function (err, result) {
+		if (err) throw err;
+		return result[0].popularity;
 	});
 }
 

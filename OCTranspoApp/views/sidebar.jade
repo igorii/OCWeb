@@ -8,9 +8,6 @@ div#sidebar
         button(class='btn', onclick="Sidebar.switchMode(Sidebar.modes.DIRECTIONS)",
             title='Get transit directions')
             span(class='icon-road')
-        button(class='btn', onclick="Sidebar.switchMode(Sidebar.modes.SCHEDULE)",
-            title='Check the full schedule for a route')
-            span(class='icon-list-alt')
         button(class='btn', onclick="Sidebar.switchMode(Sidebar.modes.USER)",
             title='Access user information')
             span(class='icon-user')
@@ -20,10 +17,10 @@ div#sidebar
         div#stopSummaryContent
             h5 Get route summary for stop
             div.input-append
-                input(type='text', id='stopID', class='sidebarText', placeholder="Stop ID…")
+                input(type='text', id='stopID', class='sidebarText', placeholder="Stop ID or Name…")
                 button(id='submitStopByID', class='btn') Go
-            br
-            div#stopMatchResults
+            //br
+            //div#stopMatchResults
             br
             div#summaryResults
             br
@@ -40,13 +37,14 @@ div#sidebar
             br
             div#directionsResults
 
-        div#scheduleContent
-            h5 Schedule
-            br
-            div#scheduleResults
-
         div#userContent
             h5 User options
+            div.input-append
+                input(type='text', id='loginName', class='sidebarText', placeholder="Username")
+                br
+                input(type='text', id='loginPassword', class='sidebarText', placeholder="Password")
+                br
+                button(id='login', class='btn') Login
             br
             div#scheduleResults
 
