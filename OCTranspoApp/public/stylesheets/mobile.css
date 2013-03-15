@@ -1,25 +1,87 @@
-@media handheld {
+#header {
+    background-color: #4D4D4D;
+    text-align: center;
+    height: 39px;
+    color: #FCFCFC;
+}
 
-	#footer {
-	    position: absolute;
-	    background-color: #222;
-	    bottom: 0px;    
-	    height: 50px;
-	    padding: 5px;
-	}
+#footer {
+    position: absolute;
+    background-color: #4D4D4D;
+    height: 8%;
+    width: 100%;
+    padding: 5px;
+    bottom: 0px;
+    text-align: center;
+}
 
-	#summaryBtn {
-		float: left;
-	    background-color: #f00;
-	}
+#summaryContent {
+    width: auto;
+    height: 100px;
+    padding: 5px;
+    top: 40px;
+    text-align: center;
+}
 
-	#directionsBtn {
-		float: center;
-	    background-color: #0f0;
-	}
+#directionsContent {
+    position: absolute;
+    visibility: hidden;
+    top: 40px;
+    padding: 5px;
+    text-align: center;
+    width: 100%;
+}
 
-	#userBtn {
-		float: right;
-	    background-color: #00f;
-	}
+#userContent {
+    position: absolute;
+    visibility: hidden;
+    padding: 5px;
+    top: 40px;
+    text-align: center;
+    width: 100%;
+}
+
+#map_canvas {
+    position: absolute;
+    top:0;
+    left:0;
+    width: 100px;
+    height: 100px;
+}
+
+#summaryBtn {
+    background-color: #f00;
+    float: left;
+    height:90%;
+    bottom:0;
+    position:absolute;
+    background-color: #5D5D5D;
+    border-radius:15px;
+}
+
+#directionsBtn {
+    background-color: #0f0;
+    float: center;
+    height:90%;
+    bottom:0;
+    position:absolute;
+    left: 34%;
+    background-color: #5D5D5D;
+    border-radius:15px;
+}
+
+#userBtn {
+    background-color: #00f;
+    float: right;
+    height:90%;
+    bottom:0;
+    position:absolute;
+    left: 66%;
+    background-color: #5D5D5D;
+    border-radius:15px;
+}
+
+.icon-white {
+    position:relative;
+    top:30%
 }

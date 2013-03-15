@@ -52,6 +52,10 @@ h1 {
     visibility: hidden;
 }
 
+#directionsResults {
+    width: 350px;
+}
+
 #scheduleContent {
     position: absolute;
     top: 130px;

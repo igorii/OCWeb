@@ -21,10 +21,10 @@ exports.getAllStops = function(req, res) {
 }
 
 exports.getStopPopularity = function(stopID) {
-	StopsDb.find({ stop: stopID }).toArray(function (err, result) {
-		if (err) throw err;
-		return result[0].popularity;
-	});
+    StopsDb.find({ stop: stopID }).toArray(function (err, result) {
+    if (err) throw err;
+        return result[0].popularity;
+    });
 }
 
 //exports.incrementPop = function (stopID)
