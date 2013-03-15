@@ -1,0 +1,48 @@
+extends layoutMobile
+
+block content
+    div#container
+        div#header
+            h1 OC Transpo App
+
+        div#pageContent
+            div#summaryContent
+                h5 Get route summary for stop
+                div.input-append
+                    input(type="number", id='stopID', class='sidebarText', placeholder="Stop ID or Name…")
+                    button(id='submitStopByID', class='btn') Go
+                br
+                div#summaryResults.result
+                br
+                div#routeResults.result
+
+            div#directionsContent
+                h5 Get directions
+                div.input-append
+                    input(type='text', id='directionsTo', class='sidebarText', placeholder="From…")
+                    br
+                    input(type='text', id='directionsFrom', class='sidebarText', placeholder="To…")
+                    br
+                    button(id='getDirections', class='btn') Go
+                br
+                div#directionsResults
+
+            div#userContent
+                h5 User options
+                div.input-append
+                    input(type='text', id='loginName', class='sidebarText', placeholder="Username")
+                    br
+                    input(type='password', id='loginPassword', class='sidebarText', placeholder="Password")
+                    br
+                    button(id='login', class='btn') Login
+
+            div#map_canvas
+                p Map
+
+        div#footer
+            div#summaryBtn
+                i(class="icon-arrow-down icon-white")
+            div#directionsBtn
+                i(class="icon-road icon-white")
+            div#userBtn
+                i(class="icon-user icon-white")

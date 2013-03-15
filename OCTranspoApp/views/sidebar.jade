@@ -19,12 +19,10 @@ div#sidebar
             div.input-append
                 input(type='text', id='stopID', class='sidebarText', placeholder="Stop ID or Name…")
                 button(id='submitStopByID', class='btn') Go
-            //br
-            //div#stopMatchResults
             br
-            div#summaryResults
+            div#summaryResults.result
             br
-            div#routeResults
+            div#routeResults.result
 
         div#directionsContent
             h5 Get directions
@@ -42,7 +40,7 @@ div#sidebar
             div.input-append
                 input(type='text', id='loginName', class='sidebarText', placeholder="Username")
                 br
-                input(type='text', id='loginPassword', class='sidebarText', placeholder="Password")
+                input(type='password', id='loginPassword', class='sidebarText', placeholder="Password")
                 br
                 button(id='login', class='btn') Login
             br

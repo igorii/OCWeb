@@ -58,6 +58,7 @@ var Map = (function (Map) {
         // Create the map
         Map.map_canvas = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
         Map.directionsRenderer.setMap(Map.map_canvas);
+        Map.directionsRenderer.setPanel(document.getElementById('directionsResults'));
     };
 
     Map.setCenter = function (lat, lng) {
@@ -155,6 +156,9 @@ $(window).resize(function () {
 // This will need to be improved so that rapid scrolling does not make the
 // map_canvas twitch
 $(window).scroll(function () {
+    if (isMobile)
+        return;
+
     $('#map_canvas').css({
         top: window.scrollY + 'px'
     });

@@ -15,11 +15,11 @@
     exports.home = function(req, res) {
         var ua = req.header('user-agent');
         if(/mobile/i.test(ua)) {
-            res.render('home-mobile', {
+            res.render('homeMobile', {
                 title: 'OCTranspo App',
-                layout: 'layout-mobile'
+                layout: 'layoutMobile'
             });
-        } else {            
+        } else {
             res.render('home', {
                 title: 'OCTranspo App'
             });
