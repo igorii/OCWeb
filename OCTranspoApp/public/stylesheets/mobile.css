@@ -1,32 +1,59 @@
 #header {
     background-color: #4D4D4D;
     text-align: center;
-    height: 39px;
+    top: 0px;
+    width:100%;
+    height: 7%;
+    position: fixed;
     color: #FCFCFC;
+    z-index: 999;
+}
+
+#container {
+    position:absolute;
+    width: 100%;
+    height: 100%;
+    left: 0px;
+    padding: 0px;
+}
+
+#pageContent {
+    position: absolute;
+    width: 100%;
+    top: 7%;
+    left: 0px;
+    padding: 0px;
+    bottom: 8%;
 }
 
 #footer {
-    position: absolute;
+    position: fixed;
     background-color: #4D4D4D;
     height: 8%;
     width: 100%;
     padding: 5px;
-    bottom: 0px;
+    bottom: -15px;
     text-align: center;
+    z-index: 999;
+}
+
+#map_canvas {
+    position: absolute;
+    width: 100%;
+    bottom: 0px;
+    height: 400px;
 }
 
 #summaryContent {
-    width: auto;
-    height: 100px;
+    width: 100%;
+    position: absolute;
     padding: 5px;
-    top: 40px;
     text-align: center;
 }
 
 #directionsContent {
     position: absolute;
     visibility: hidden;
-    top: 40px;
     padding: 5px;
     text-align: center;
     width: 100%;
@@ -36,19 +63,14 @@
     position: absolute;
     visibility: hidden;
     padding: 5px;
-    top: 40px;
     text-align: center;
     width: 100%;
 }
 
-#map_canvas {
-    position: absolute;
-}
-
 #summaryBtn {
     background-color: #f00;
-    float: left;
     height: 90%;
+    max-width: 30%;
     bottom: 0;
     position: absolute;
     background-color: #5D5D5D;
@@ -59,6 +81,7 @@
     background-color: #0f0;
     float: center;
     height: 90%;
+    max-width: 30%;
     bottom: 0;
     position: absolute;
     left: 34%;
@@ -70,6 +93,7 @@
     background-color: #00f;
     float: right;
     height: 90%;
+    max-width: 30%;
     bottom: 0;
     position: absolute;
     left: 66%;
@@ -77,7 +101,29 @@
     border-radius: 15px;
 }
 
+#summaryResults {
+    position: absolute;
+    max-width: 100%;
+    visibility: hidden;
+}
+
+#routeResults {
+    position: absolute;
+    max-width: 100%;
+    visibility: hidden;
+}
+
+#direcionResults {
+    position: absolute;
+    max-width: 100%;
+    visibility: hidden;
+}
+
+.input-append {
+    max-width: 100%;
+}
+
 .icon-white {
     position:relative;
-    top:30%
+    top:20%
 }

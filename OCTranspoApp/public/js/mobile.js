@@ -3,6 +3,7 @@ $(window).ready(function () {
     var summaryButton = document.getElementById('summaryBtn');
     var directionsButton = document.getElementById('directionsBtn');
     var userButton = document.getElementById('userBtn');
+    var submitStopButton = document.getElementById('submitStopByID');
 
     var width = screen.width / 5;
 
@@ -24,6 +25,12 @@ $(window).ready(function () {
     }
 
     userButton.onclick = function () {
+        $('#summaryContent').css({visibility:'hidden'});
+        $('#directionsContent').css({visibility:'hidden'});
+        $('#userContent').css({visibility:'visible'});
+    }
+
+    submitStopButton.onclick = function () {
         $('#summaryContent').css({visibility:'hidden'});
         $('#directionsContent').css({visibility:'hidden'});
         $('#userContent').css({visibility:'visible'});

@@ -9,6 +9,7 @@ var StopsDb = db.collection('stops');
 var StopTimesDb = db.collection('stop_times');
 var RoutesDb = db.collection('routes');
 var TripsDb = db.collection('trips');
+var UsersDb = db.collection('users');
 
 // Store stop data as JSON in memory
 var stopData;
@@ -22,8 +23,15 @@ exports.getAllStops = function(req, res) {
 
 exports.getStopPopularity = function(stopID) {
     StopsDb.find({ stop: stopID }).toArray(function (err, result) {
-    if (err) throw err;
+    	if (err) throw err;
         return result[0].popularity;
+    });
+}
+
+exports.getUser = function(username, next) {
+	UsersDb.find({ 'username': username }).toArray(function (err, result) {
+    	if (err) throw err;
+        next(result[0]);
     });
 }
 
