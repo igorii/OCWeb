@@ -321,7 +321,13 @@ var Sidebar = (function (Sidebar) {
                     Sidebar.submitStop(false);
                 };
             }
-        }
+        }        
+    }
+
+    Sidebar.loginUser = function(username, password) {
+        $.post('login', { 'username': username, 'password': password }).done(function(result) {
+            document.getElementById('userPanel').innerHTML = result;
+        });        
     }
 
     return Sidebar;
@@ -333,6 +339,11 @@ var Sidebar = (function (Sidebar) {
 $('#submitStopByID').click(Sidebar.submitStop);
 $('#submitRouteByID').click(function() {
     Sidebar.getTrips($('#stopID').val(), $('#routeNo').val());
+});
+
+
+$('#login').click(function() {
+    Sidebar.loginUser($('#loginName').val(), $('#loginPassword').val());
 });
 
 /*    Directions Mode */
@@ -368,6 +379,8 @@ registerEnterPress('#stopID', '#submitStopByID');
 registerEnterPress('#routeNo', '#submitRouteByID');
 registerEnterPress('#getDirections', '#directionsTo');
 registerEnterPress('#directionsFrom', '#getDirections');
+registerEnterPress('#loginName', '#login');
+registerEnterPress('#loginPassword', '#login');
 
 function registerEnterPress(inputID, buttonID) {
     $(inputID).keyup(function (event) {
