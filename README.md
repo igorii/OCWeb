@@ -48,11 +48,11 @@ Milestones
 * Import bus schedules from OC Transpo provided .csv
 * Setup user statistics and stop reliability databases
 
-**March 4**
+~~**March 4**~~
 *Framework demo (running application skeleton)*
 * Provide working demo of features included in framework, such as database and OCTranspo API communication from node.js server
 
-**March 11**
+~~**March 11**~~
 *Desktop and mobile front end design and implementation*
 * User interface design and prototype
 * Implement general features excluding user profiles
