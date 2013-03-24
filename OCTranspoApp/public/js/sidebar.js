@@ -77,7 +77,10 @@ var Sidebar = (function (Sidebar) {
                 oldContent = $('#directionsContent');
                 break;
             case Sidebar.modes.USER:
-                oldContent = $('#userContent');
+                if (User.isLoggedIn())
+                    oldContent = $('#userContentLoggedIn');
+                else
+                    oldContent = $('#userContent');
                 break;
         }
 
@@ -92,13 +95,19 @@ var Sidebar = (function (Sidebar) {
                 Sidebar.currMode = Sidebar.modes.DIRECTIONS;
                 break;
             case Sidebar.modes.USER:
-                newContent = $('#userContent');
+                if (!User.isLoggedIn())
+                    newContent = $('#userContent');
+                else
+                    newContent = $('#userContentLoggedIn');
                 Sidebar.currMode = Sidebar.modes.USER;
                 break;
         }
 
         oldContent.css({visibility:'hidden'});
         newContent.css({visibility:'visible'});
+
+        if ((Sidebar.currMode === Sidebar.modes.USER) && User.isLoggedIn())
+            User.renderLoggedInPanel();
 
         return newContent;
     }
@@ -230,6 +239,8 @@ var Sidebar = (function (Sidebar) {
 
         for (var i = 0, j = array.length; i < j; ++i) {
             var div = document.createElement('div');
+            if (User.isLoggedIn())
+                div.innerHTML += '<i class="icon-star-empty"></i> ';
             div.innerHTML += array[i];
             div.className = 'result';
 
@@ -281,8 +292,10 @@ var Sidebar = (function (Sidebar) {
         if (Sidebar.lastRoute && !Map.stopMarkersOn())
             Map.toggleStopMarker(false, Sidebar.lastRoute, false);
 
+        //console.log('looking through ' + Map.allStops.length);
         for (var i = 0, j = Map.allStops.length; i < j; ++i) {
-            if (stopID === Map.allStops[i]['stop_code']) {
+            if (stopID == Map.allStops[i]['stop_code']) {
+                //console.log('Stop: ' + Map.allStops[i]);
                 marker = Map.toggleStopMarker(true, i, true);
                 Map.setCenter(Map.allStops[i]['stop_lat'], Map.allStops[i]['stop_lon']);
                 Map.setZoom(18);
@@ -322,13 +335,7 @@ var Sidebar = (function (Sidebar) {
                 };
             }
         }        
-    }
-
-    Sidebar.loginUser = function(username, password) {
-        $.post('login', { 'username': username, 'password': password }).done(function(result) {
-            document.getElementById('userPanel').innerHTML = result;
-        });        
-    }
+    }       
 
     return Sidebar;
 }(Sidebar || {}));
@@ -339,11 +346,6 @@ var Sidebar = (function (Sidebar) {
 $('#submitStopByID').click(Sidebar.submitStop);
 $('#submitRouteByID').click(function() {
     Sidebar.getTrips($('#stopID').val(), $('#routeNo').val());
-});
-
-
-$('#login').click(function() {
-    Sidebar.loginUser($('#loginName').val(), $('#loginPassword').val());
 });
 
 /*    Directions Mode */
@@ -379,8 +381,6 @@ registerEnterPress('#stopID', '#submitStopByID');
 registerEnterPress('#routeNo', '#submitRouteByID');
 registerEnterPress('#getDirections', '#directionsTo');
 registerEnterPress('#directionsFrom', '#getDirections');
-registerEnterPress('#loginName', '#login');
-registerEnterPress('#loginPassword', '#login');
 
 function registerEnterPress(inputID, buttonID) {
     $(inputID).keyup(function (event) {
