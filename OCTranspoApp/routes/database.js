@@ -3,7 +3,7 @@
 
 var mongo = require('mongoskin');
 var mdb = require('mongodb');
-var db = mongo.db('localhost:27017/mondb');
+var db = mongo.db('localhost:5001/mondb');
 
 var StopsDb = db.collection('stops');
 var StopTimesDb = db.collection('stop_times');
