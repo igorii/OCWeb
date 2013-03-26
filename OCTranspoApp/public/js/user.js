@@ -1,7 +1,14 @@
 var User = (function (User) {
 	var loggedin = false;
 
+    $.post('/loggedIn').done( function(result) {
+        loggedin = result;
+    });
+
 	User.isLoggedIn = function () { return loggedin };
+    User.setLoggedIn = function ( isLogged ) { 
+        loggedIn = isLogged
+    };
 	User.login = function(username, password) {
 		$('#loginPassword').val('');
 
@@ -32,14 +39,16 @@ var User = (function (User) {
 	User.logout = function () {
 		if (!loggedin) return;
 
-		document.username = '';
-		loggedin = false;
+        $.post('logout').done(function(result) {
+    		document.username = '';
+    		loggedin = false;
 
-		$('#userPanelLoggedIn').html('');
+    		$('#userPanelLoggedIn').html('');
 
-		$('#userContent').css({visibility:'visible'});
-        $('#userContentLoggedIn').css({visibility:'hidden'});
-        return;
+    		$('#userContent').css({visibility:'visible'});
+            $('#userContentLoggedIn').css({visibility:'hidden'});
+            return;
+        });
 	};
 
 	User.renderLoggedInPanel = function () {
