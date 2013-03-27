@@ -174,10 +174,11 @@ $(window).scroll(function () {
     });
 });
 
-$(document).ready( function() {
+$(document).ready( function() {    
     $.post('/getAllStopsFromDb', {}).done( function(result) {
         Map.initializeStopMarkers(result);
     });
+    
 });
 
 // Check if mobile
