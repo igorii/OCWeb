@@ -6,10 +6,12 @@ var mdb = require('mongodb');
 var db = mongo.db('localhost:27017/mondb');
 
 var StopsDb = db.collection('stops');
-var StopTimesDb = db.collection('stop_times');
+//var StopTimesDb = db.collection('stop_times');
 var RoutesDb = db.collection('routes');
-var TripsDb = db.collection('trips');
+//var TripsDb = db.collection('trips');
 var UsersDb = db.collection('users');
+
+console.log ('Databases loaded...');
 
 // Store stop data as JSON in memory
 var stopData;

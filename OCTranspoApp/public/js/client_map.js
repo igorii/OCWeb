@@ -5,6 +5,7 @@ var Map = (function (Map) {
     Map.map_canvas         = null;
     Map.stopMarkers        = [];
     Map.customMarkers      = [];
+    Map.tempMarkers        = null;
     Map.allStops           = null;
     Map.directionsService  = new google.maps.DirectionsService();
     Map.directionsRenderer = new google.maps.DirectionsRenderer();
@@ -14,6 +15,7 @@ var Map = (function (Map) {
             return;
         }
 
+        console.log ('got here');
         Map.allStops = stops;
 
         // Draw every bus stop (temporary)
@@ -111,6 +113,15 @@ var Map = (function (Map) {
         Map.customMarkers.length = 0; // Remove references to all custom markers
     };
 
+    Map.deleteTempMarkers = function () {
+        if (Map.tempMarkers === null) return;
+
+        for (var i = 0; i < Map.tempMarkers.length; ++i) {
+            Map.tempMarkers[i].setMap(null);
+        }
+        Map.tempMarkers.length = null; // Remove references to all custom markers
+    };
+
     Map.toggleStopMarkers = function (show) {
         var map = null;
 
@@ -174,7 +185,7 @@ $(window).scroll(function () {
     });
 });
 
-$(document).ready( function() {    
+$(document).ready( function() {
     $.post('/getAllStopsFromDb', {}).done( function(result) {
         Map.initializeStopMarkers(result);
     });
