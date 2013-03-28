@@ -240,7 +240,7 @@ var Sidebar = (function (Sidebar) {
         for (var i = 0, j = array.length; i < j; ++i) {
             var div = document.createElement('div');
             if (User.isLoggedIn())
-                div.innerHTML += '<i class="icon-star-empty"></i> ';
+                div.innerHTML += '<i class="icon-star-empty" onclick="alert()"></i> ';
             div.innerHTML += array[i];
             div.className = 'result';
 
