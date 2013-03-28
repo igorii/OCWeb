@@ -240,7 +240,7 @@ var Sidebar = (function (Sidebar) {
         for (var i = 0, j = array.length; i < j; ++i) {
             var div = document.createElement('div');
             if (User.isLoggedIn())
-                div.innerHTML += '<i class="icon-star-empty"></i> ';
+                div.innerHTML += '<i class="icon-star-empty" onclick="alert()"></i> ';
             div.innerHTML += array[i];
             div.className = 'result';
 
@@ -276,18 +276,28 @@ var Sidebar = (function (Sidebar) {
         // If the text in the StopID field is not a stop number, look for all stops
         // that match the string entered by name
         if (!number) {
+            if (Map.tempMarkers !== null) 
+                Map.deleteTempMarkers();
+
             stopID = stopID.toUpperCase();
             var matchingStops = [];
+            var markers = [];
 
             for (var i = 0, j = Map.allStops.length; i < j; ++i) {
                 if (Map.allStops[i]['stop_name'].match(stopID)) {
                     matchingStops.push(Map.allStops[i]);
+                    markers.push(Map.toggleStopMarker(true, i, true));
                 }
             }
 
             displayMatches(matchingStops);
+            Map.tempMarkers = markers;
+            Map.zoomToMarkers(markers);
             return;
         }
+
+        if (document.getElementById('sidebar2') === null)
+            Map.deleteTempMarkers();
 
         if (Sidebar.lastRoute && !Map.stopMarkersOn())
             Map.toggleStopMarker(false, Sidebar.lastRoute, false);
