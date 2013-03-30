@@ -7,15 +7,12 @@ var db = mongo.db('localhost:27017/mondb');
 
 var StopsDb = db.collection('stops');
 //var StopTimesDb = db.collection('stop_times');
-var RoutesDb = db.collection('routes');
+//var RoutesDb = db.collection('routes');
 //var TripsDb = db.collection('trips');
 var UsersDb = db.collection('users');
 
-console.log ('Databases loaded...');
-
 // Store stop data as JSON in memory
 var stopData;
-
 
 exports.getAllStops = function(req, res) {
 	StopsDb.find().toArray(function (err, result) {
@@ -35,6 +32,12 @@ exports.getUser = function(username, next) {
     	if (err) throw err;
         next(result[0]);
     });
+}
+
+exports.createUser = function(username, password, callback) {
+    UsersDb.insert({ 'username': username, 'password': password });
+    callback(true);
+    // TODO: Error check, and return false on error
 }
 
 //exports.incrementPop = function (stopID)

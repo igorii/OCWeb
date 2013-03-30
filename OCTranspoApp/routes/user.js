@@ -9,6 +9,21 @@ exports.list = function(req, res){
   res.send("respond with a resource");
 };
 
+exports.userRegister = function (req, res) {
+    database.getUser(req.body.username, function(result) {
+        if (result) {
+            res.send('Username Taken');
+        }
+
+        database.createUser(req.body.username, req.body.password, function (success) {
+            if (success)
+                res.send('Success');
+            else
+                res.send('Failure');
+        });
+    });
+};
+
 exports.userLogin = function(req, res) {
 	database.getUser(req.body.username, function(result) {
 		if (result) {
