@@ -31,9 +31,7 @@ $(window).ready(function () {
     }
 
     submitStopButton.onclick = function () {
-        $('#summaryContent').css({visibility:'hidden'});
-        $('#directionsContent').css({visibility:'hidden'});
-        $('#userContent').css({visibility:'visible'});
+        Sidebar.getSummary($('#stopID').val()); 
     }
 });
 

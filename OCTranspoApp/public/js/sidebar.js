@@ -114,6 +114,9 @@ var Sidebar = (function (Sidebar) {
 
     /* Responsible for retrieving the next trips for a given stop from the server */
     Sidebar.getTrips = function (stopID, routeNo) {
+        if (isMobile)
+            deleteChildrenById('summaryResults');
+        
         $.post('/getTrips', { stopID: stopID, routeNo: routeNo }).done(function(result) {
             var str;
             var results = [];
@@ -250,6 +253,8 @@ var Sidebar = (function (Sidebar) {
             if (clickable) bindClick(div, array[i]);
 
             results.appendChild(div);
+            console.log('Div: ' + div);
+            console.log('Result: ' + results);
         }
 
         function bindClick (div, string) {
