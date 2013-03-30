@@ -103,24 +103,25 @@
 
 #summaryResults {
     position: absolute;
-    max-width: 100%;
-    visibility: hidden;
+    width: 100%;
+    visibility: visible;
+    text-align: center;
 }
 
 #routeResults {
     position: absolute;
-    max-width: 100%;
-    visibility: hidden;
+    width: 100%;
+    visibility: visible;
 }
 
 #direcionResults {
     position: absolute;
-    max-width: 100%;
+    width: 100%;
     visibility: hidden;
 }
 
 .input-append {
-    max-width: 100%;
+    width: 100%;
 }
 
 .icon-white {
