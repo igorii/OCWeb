@@ -1,15 +1,34 @@
 var User = (function (User) {
 	var loggedin = false;
 
-    $.post('/loggedIn').done( function(result) {
-        loggedin = result;
-    });
+    // Make initial check whether the user is logged in
+    $.post('/loggedIn').done( function(result) { loggedin = result; });
 
-	User.isLoggedIn = function () { return loggedin };
-    User.setLoggedIn = function ( isLogged ) { 
-        loggedIn = isLogged
+	User.isLoggedIn  = function () { return loggedin; };
+    User.setLoggedIn = function (isLogged) { loggedIn = isLogged; }; // TODO: Get rid of this... this is dangerous
+    User.register    = function (username, password1, password2) { 
+		$('#registerpassword1').val('');
+		$('#registerPassword2').val('');
+
+        if (password1 != password2)
+            //TODO: Handle password mismatch
+
+        $.post('register', { 'username': username, 'password': password1 }).done(function(result) {
+            switch (result) {
+                case 'Success':
+                    User.login(username, password1);
+                    break;
+
+                case 'Username Taken':
+                    break;
+
+                case 'Failure':
+                    break;
+            }
+        });
     };
-	User.login = function(username, password) {
+
+    User.login = function (username, password) {
 		$('#loginPassword').val('');
 
         $.post('login', { 'username': username, 'password': password }).done(function(result) {
@@ -31,7 +50,6 @@ var User = (function (User) {
         			break;
         	}
 
-        	console.log('Login: ' + User.isLoggedIn());
             document.getElementById('userPanel').innerHTML = result;
         }); 
 	};
@@ -70,5 +88,14 @@ $('#login').click(function() {
     User.login($('#loginName').val(), $('#loginPassword').val());
 });
 
-registerEnterPress('#loginName', '#login');
-registerEnterPress('#loginPassword', '#login');
+$('#register').click(function() {
+    User.register($('#registerName').val(), 
+                  $('#registerPassword1').val(),
+                  $('#registerPassword2').val());
+});
+
+registerEnterPress('#loginName',         '#login');
+registerEnterPress('#loginPassword',     '#login');
+registerEnterPress('#registerName',      '#register');
+registerEnterPress('#registerPassword1', '#register');
+registerEnterPress('#registerPassword2', '#register');

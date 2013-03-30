@@ -37,6 +37,8 @@ div#sidebar
 
         div#userContent
             h5 User options
+            br
+            h4 Login
             div#userInputs.input-append
                 input(type='text', id='loginName', class='sidebarText', placeholder="Username")
                 br
@@ -44,6 +46,16 @@ div#sidebar
                 br
                 button(id='login', class='btn') Login
             br
+            br
+            h4 Register
+            div#userInputsRegister.input-append
+                input(type='text', id='registerName', class='sidebarText', placeholder="Username")
+                br
+                input(type='password', id='registerPassword1', class='sidebarText', placeholder="Password")
+                br
+                input(type='password', id='registerPassword2', class='sidebarText', placeholder="Confirm password")
+                br
+                button(id='register', class='btn') Register
             div#userPanel   
 
         div#userContentLoggedIn

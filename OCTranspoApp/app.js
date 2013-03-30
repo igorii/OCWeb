@@ -59,6 +59,7 @@ app.post('/getSummary', map.getSummary);
 app.post('/getTrips', map.getTrips);
 app.post('/getAllStopsFromDb', database.getAllStops);
 app.post('/login', user.userLogin);
+app.post('/register', user.userRegister);
 app.post('/logout', user.userLogout);
 app.post('/loggedIn', user.loggedIn);
 
