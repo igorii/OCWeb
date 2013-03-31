@@ -15,8 +15,10 @@ var UsersDb = db.collection('users');
 var stopData;
 
 exports.getAllStops = function(req, res) {
+    console.log('Getting all stops');
 	StopsDb.find().toArray(function (err, result) {
-		res.json(result);
+		console.log('Sending all stops');
+        res.json(result);
 	});
 }
 
