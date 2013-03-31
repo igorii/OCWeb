@@ -201,6 +201,17 @@ var Sidebar = (function (Sidebar) {
             // Clear results from previous stop
             deleteChildrenById('routeResults');
 
+            if (User.isLoggedIn()) {
+                // create favourite button
+                var favButton = document.createElement('button');
+                favButton.innerHTML = 'Add ' + stopID + ' to favourites';
+
+                // bind button to User.addFavouriteStop(stopID)
+
+                // append button to div#routeResults
+                document.getElementById('summaryResults').appendChild(favButton);
+            }
+
             // Parse results into js
             result = JSON.parse(result);
 
@@ -224,14 +235,16 @@ var Sidebar = (function (Sidebar) {
             Sidebar.lastRoute = stopID;
             console.log(result);
             displayResults(results, 'summaryResults', true,
-                'Summary of <em>' + toTitleCase(result['StopDescription'][0]['_']) + '</em>');
+                'Summary of <em>' + toTitleCase(result['StopDescription'][0]['_']) + '</em>',
+                stopID
+                );
         });
     };
 
     /* Displays an array of strings as a series of divs under the given DOM ID
      * If clickable is true, then a function is bound to each div that retrieves
      * the appropriate trips when clicked */
-    function displayResults (array, id, clickable, title) {
+    function displayResults (array, id, clickable, title, stopID) {
         var results = document.getElementById(id);
 
         deleteChildrenById(id);
@@ -242,8 +255,8 @@ var Sidebar = (function (Sidebar) {
 
         for (var i = 0, j = array.length; i < j; ++i) {
             var div = document.createElement('div');
-            if (User.isLoggedIn())
-                div.innerHTML += '<i class="icon-star-empty" onclick="alert()"></i> ';
+            if (User.isLoggedIn() && clickable)
+                div.innerHTML += '<i class="icon-star-empty" onclick="User.addFavRoute(' + stopID + ',' + parseInt(array[i]) + ')"></i> ';
             div.innerHTML += array[i];
             div.className = 'result';
 
