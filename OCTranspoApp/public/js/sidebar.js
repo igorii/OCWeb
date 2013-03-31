@@ -131,7 +131,6 @@ var Sidebar = (function (Sidebar) {
 
             // Parse results into js
             result = JSON.parse(result);
-            console.log(result);
 
             // If no trips are found for route, alert and return
             if (result['Trips'][0]['Trip'] === undefined) {
@@ -157,6 +156,7 @@ var Sidebar = (function (Sidebar) {
                 if (trips[0]['LastTripOfSchedule'][0] === 'true')
                     str += '<br><b>Last Trip</b>';
 
+                // Create the bus marker
                 var marker = Map.addMarker(bus.lat, bus.lng,
                                  "HELLLOOOO",
                                  str,
@@ -201,17 +201,6 @@ var Sidebar = (function (Sidebar) {
             // Clear results from previous stop
             deleteChildrenById('routeResults');
 
-            if (User.isLoggedIn()) {
-                // create favourite button
-                var favButton = document.createElement('button');
-                favButton.innerHTML = 'Add ' + stopID + ' to favourites';
-
-                // bind button to User.addFavouriteStop(stopID)
-
-                // append button to div#routeResults
-                document.getElementById('summaryResults').appendChild(favButton);
-            }
-
             // Parse results into js
             result = JSON.parse(result);
 
@@ -233,7 +222,6 @@ var Sidebar = (function (Sidebar) {
             }
 
             Sidebar.lastRoute = stopID;
-            console.log(result);
             displayResults(results, 'summaryResults', true,
                 'Summary of <em>' + toTitleCase(result['StopDescription'][0]['_']) + '</em>',
                 stopID
@@ -255,8 +243,16 @@ var Sidebar = (function (Sidebar) {
 
         for (var i = 0, j = array.length; i < j; ++i) {
             var div = document.createElement('div');
-            if (User.isLoggedIn() && clickable)
-                div.innerHTML += '<i class="icon-star-empty" onclick="User.addFavRoute(' + stopID + ',' + parseInt(array[i]) + ')"></i> ';
+            
+            // Print the favourit star
+            if (User.isLoggedIn() && clickable) {
+                var route = parseInt(array[i]);
+                if (User.hasFavouriteRoute(parseInt(stopID), route))
+                    div.innerHTML += '<i id="route-' + route + '" class="icon-star"></i> ';
+                else
+                    div.innerHTML += '<i id="route-' + route + '" class="icon-star-empty" onclick="Sidebar.addFavRoute(' + stopID + ',' + route + ')"></i> ';
+            }
+            
             div.innerHTML += array[i];
             div.className = 'result';
 
@@ -266,8 +262,6 @@ var Sidebar = (function (Sidebar) {
             if (clickable) bindClick(div, array[i]);
 
             results.appendChild(div);
-            console.log('Div: ' + div);
-            console.log('Result: ' + results);
         }
 
         function bindClick (div, string) {
@@ -277,6 +271,22 @@ var Sidebar = (function (Sidebar) {
             };
         }
     }
+
+    Sidebar.addFavRoute = function (stopID, routeID) {
+        // Add the favourite stop to the user
+        User.addFavStop(stopID, routeID);
+
+        // Fill in star
+        $('#route-' + routeID).attr('class', 'icon-star');
+
+        // Add new favourite to sidebar 
+        var newFav = document.createElement('button');
+        newFav.innerHTML = stopID + ':' + routeID;
+        
+        // Bind action to new button
+        newFav.onclick = function () { Sidebar.getTrips(stopID, routeID); };
+        document.getElementById('favRoutes').appendChild(newFav);
+    };
 
     Sidebar.submitStop = function(newQuery) {
         var stopID = $('#stopID').val();
@@ -320,10 +330,8 @@ var Sidebar = (function (Sidebar) {
         if (Sidebar.lastRoute && !Map.stopMarkersOn())
             Map.toggleStopMarker(false, Sidebar.lastRoute, false);
 
-        //console.log('looking through ' + Map.allStops.length);
         for (var i = 0, j = Map.allStops.length; i < j; ++i) {
             if (stopID == Map.allStops[i]['stop_code']) {
-                //console.log('Stop: ' + Map.allStops[i]);
                 marker = Map.toggleStopMarker(true, i, true);
                 Map.setCenter(Map.allStops[i]['stop_lat'], Map.allStops[i]['stop_lon']);
                 Map.setZoom(18);
@@ -397,7 +405,7 @@ $('#getDirections').click(function() {
                 return;
         }
 
-        Map.directionsRenderer.setDirections(result);(result);
+        Map.directionsRenderer.setDirections(result);
     });
 });
 
@@ -436,6 +444,5 @@ function toTitleCase(str)
 }
 
 $(window).scroll(function () {
-    console.log('Changing sidebar2 y');
     Sidebar.repositionSidebarSecondary();
 });

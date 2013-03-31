@@ -45,6 +45,7 @@ h1 {
 #stopSummaryContent {
     position: absolute;
     top: 130px;
+    max-width: 350px;
 }
 
 #directionsContent {

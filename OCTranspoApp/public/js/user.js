@@ -63,6 +63,8 @@ var User = (function (User) {
         $.post('logout').done(function(result) {
     		document.username = '';
     		loggedin = false;
+            User.favRoutes = [];
+            USer.favStops = [];
 
     		$('#userPanelLoggedIn').html('');
 
@@ -72,6 +74,27 @@ var User = (function (User) {
         });
 	};
 
+    // Check whether a given route is in the users favourites or not
+    User.hasFavouriteRoute = function (stopID, routeID) {
+        var i, j;
+        for (i = 0, j = User.favRoutes.length; i < j; ++i)
+            if (User.favRoutes[i].stopID === stopID &&
+                User.favRoutes[i].routeID === routeID)
+                return true;
+        
+        return false;
+    }
+    
+    // Check whether a given stop is in the users favourites or not
+    User.hasFavouriteStop = function (stopID) {
+        var i, j;
+        for (i = 0, j = User.favStops.length; i < j; ++i) 
+            if (User.favRoutes[i].stopID === stopID)
+                return true;
+
+        return false;
+    }
+
     // Add a favourite stop to the users list of favourite stops
     User.addFavStop = function (stopID) {
         User.favStops.push(stopID);
@@ -80,16 +103,12 @@ var User = (function (User) {
     };
 
     User.addFavRoute = function (stopID, routeID) {
+        if (User.hasFavouriteRoute(stopID, routeID)) return;
+        
         var route = { stopID: stopID, routeID: routeID };
         User.favRoutes.push(route);
 
         // TODO: post to server to add route as favourite for user
-    
-        // Add new favourite to sidebar 
-        var newFav = document.createElement('button');
-        newFav.innerHTML = stopID + ':' + routeID;
-        newFav.onclick = function () { Sidebar.getTrips(stopID, routeID); };
-        document.getElementById('favRoutes').appendChild(newFav);
     };
 
 	User.renderLoggedInPanel = function () {
