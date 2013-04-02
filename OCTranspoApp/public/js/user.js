@@ -8,12 +8,11 @@ var User = (function (User) {
     $.post('/loggedIn').done( function(result) { loggedin = result; });
 
 	User.isLoggedIn  = function () { return loggedin; };
-    User.setLoggedIn = function (isLogged) { loggedIn = isLogged; }; // TODO: Get rid of this... this is dangerous
     User.register    = function (username, password1, password2) { 
-		$('#registerpassword1').val('');
+		$('#registerPassword1').val('');
 		$('#registerPassword2').val('');
 
-        if (password1 != password2)
+        //if (password1 != password2)
             //TODO: Handle password mismatch
 
         $.post('register', { 'username': username, 'password': password1 }).done(function(result) {
@@ -23,9 +22,11 @@ var User = (function (User) {
                     break;
 
                 case 'Username Taken':
+                    alert("Username is taken!");
                     break;
 
                 case 'Failure':
+                    alert("Registration Failed!");
                     break;
             }
         });
@@ -99,7 +100,7 @@ var User = (function (User) {
     User.addFavStop = function (stopID) {
         User.favStops.push(stopID);
 
-        // TODO: post to server to add stop as favourite for user
+        $.post('addFavStop', {'stopID': stopID}).done(); 
     };
 
     User.addFavRoute = function (stopID, routeID) {

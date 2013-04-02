@@ -3,7 +3,7 @@
 
 var mongo = require('mongoskin');
 var mdb = require('mongodb');
-var db = mongo.db('localhost:27017/mondb');
+var db = mongo.db('localhost:5000/mondb');
 
 var StopsDb = db.collection('stops');
 //var StopTimesDb = db.collection('stop_times');
@@ -40,6 +40,16 @@ exports.createUser = function(username, password, callback) {
     UsersDb.insert({ 'username': username, 'password': password });
     callback(true);
     // TODO: Error check, and return false on error
+}
+
+exports.addUserFavStop = function(username, stopID, callback) {
+    UsersDb.update( {'username': username }, 
+                    {'favStops': UsersDb.find({'username': username}).toArray()[0].favStops.push(stopID) });
+    callback(true);
+}
+
+exports.getUserFavStops = function(username, callback) {
+    callback(UsersDb.find( {'username': username} ).toArray()[0].favStops);
 }
 
 //exports.incrementPop = function (stopID)
