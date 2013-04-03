@@ -37,9 +37,26 @@ exports.getUser = function(username, next) {
 }
 
 exports.createUser = function(username, password, callback) {
-    UsersDb.insert({ 'username': username, 'password': password });
+    UsersDb.insert({ 'username': username, 'password': password, 'favStops': []});
     callback(true);
     // TODO: Error check, and return false on error
+}
+
+exports.addUserFavRoute = function(req, res) {
+    UsersDb.find({'username': req.session.username}).toArray(function(err, result) {        
+        var newFavStops = Array.prototype.slice.call(result[0].favStops);
+        newFavStops.push({ 'stopID': req.body.stopID, 'routeID': req.body.routeID });  
+        UsersDb.update( {'username': req.session.username }, {$set: {'favStops': Array.prototype.slice.call(newFavStops)}});
+    });
+    res.send('Successfully Added Fav Route');
+}
+
+exports.getUserFavRoutes = function(req, res) {
+    var userFavStops = [];
+    UsersDb.find( {'username': req.session.username} ).toArray(function(err, result) {
+        userFavStops = Array.prototype.slice.call(result[0].favStops);
+        res.send(userFavStops);
+    });    
 }
 
 //exports.incrementPop = function (stopID)
