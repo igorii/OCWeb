@@ -18,7 +18,7 @@ exports.getAllStops = function(req, res) {
     console.log('Getting all stops');
 	StopsDb.find().toArray(function (err, result) {
 		console.log('Sending all stops');
-        res.json(result);
+        res.send(result)
 	});
 }
 
