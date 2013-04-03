@@ -29,6 +29,7 @@ exports.userLogin = function(req, res) {
 		if (result) {
 			if (result.password === req.body.password) {
 				req.session.loggedin = true;
+				req.session.username = req.body.username;
 				res.send('Login Successful');
 				return;
 			}

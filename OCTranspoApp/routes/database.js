@@ -3,7 +3,7 @@
 
 var mongo = require('mongoskin');
 var mdb = require('mongodb');
-var db = mongo.db('localhost:5000/mondb');
+var db = mongo.db('localhost:27017/mondb');
 
 var StopsDb = db.collection('stops');
 //var StopTimesDb = db.collection('stop_times');
@@ -37,19 +37,26 @@ exports.getUser = function(username, next) {
 }
 
 exports.createUser = function(username, password, callback) {
-    UsersDb.insert({ 'username': username, 'password': password });
+    UsersDb.insert({ 'username': username, 'password': password, 'favStops': []});
     callback(true);
     // TODO: Error check, and return false on error
 }
 
-exports.addUserFavStop = function(username, stopID, callback) {
-    UsersDb.update( {'username': username }, 
-                    {'favStops': UsersDb.find({'username': username}).toArray()[0].favStops.push(stopID) });
-    callback(true);
+exports.addUserFavRoute = function(req, res) {
+    UsersDb.find({'username': req.session.username}).toArray(function(err, result) {        
+        var newFavStops = Array.prototype.slice.call(result[0].favStops);
+        newFavStops.push({ 'stopID': req.body.stopID, 'routeID': req.body.routeID });  
+        UsersDb.update( {'username': req.session.username }, {$set: {'favStops': Array.prototype.slice.call(newFavStops)}});
+    });
+    res.send('Successfully Added Fav Route');
 }
 
-exports.getUserFavStops = function(username, callback) {
-    callback(UsersDb.find( {'username': username} ).toArray()[0].favStops);
+exports.getUserFavRoutes = function(req, res) {
+    var userFavStops = [];
+    UsersDb.find( {'username': req.session.username} ).toArray(function(err, result) {
+        userFavStops = Array.prototype.slice.call(result[0].favStops);
+        res.send(userFavStops);
+    });    
 }
 
 //exports.incrementPop = function (stopID)

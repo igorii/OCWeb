@@ -274,7 +274,7 @@ var Sidebar = (function (Sidebar) {
 
     Sidebar.addFavRoute = function (stopID, routeID) {
         // Add the favourite stop to the user
-        User.addFavStop(stopID, routeID);
+        User.addFavRoute(stopID, routeID);
 
         // Fill in star
         $('#route-' + routeID).attr('class', 'icon-star');

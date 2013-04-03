@@ -5,7 +5,16 @@ var User = (function (User) {
     User.favRoutes = [];
 
     // Make initial check whether the user is logged in
-    $.post('/loggedIn').done( function(result) { loggedin = result; });
+    $.post('/loggedIn').done( function(result) { 
+        loggedin = result;
+        // Load favourite routes if logged in.
+        if (loggedin) {
+            $.post('/getFavRoutes').done(function(result) {
+                console.log("WARG: " +  result);
+                User.favRoutes = result;
+            });
+        }
+    });
 
 	User.isLoggedIn  = function () { return loggedin; };
     User.register    = function (username, password1, password2) { 
@@ -65,7 +74,7 @@ var User = (function (User) {
     		document.username = '';
     		loggedin = false;
             User.favRoutes = [];
-            USer.favStops = [];
+            User.favStops = [];
 
     		$('#userPanelLoggedIn').html('');
 
@@ -98,18 +107,16 @@ var User = (function (User) {
 
     // Add a favourite stop to the users list of favourite stops
     User.addFavStop = function (stopID) {
-        User.favStops.push(stopID);
-
-        $.post('addFavStop', {'stopID': stopID}).done(); 
+        User.favStops.push(stopID);        
     };
 
     User.addFavRoute = function (stopID, routeID) {
         if (User.hasFavouriteRoute(stopID, routeID)) return;
         
-        var route = { stopID: stopID, routeID: routeID };
+        var route = { 'stopID': stopID, 'routeID': routeID };
         User.favRoutes.push(route);
 
-        // TODO: post to server to add route as favourite for user
+        $.post('addFavRoute', {'stopID': stopID, 'routeID': routeID}).done(function() {}); 
     };
 
 	User.renderLoggedInPanel = function () {
