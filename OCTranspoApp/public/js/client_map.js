@@ -9,13 +9,15 @@ var Map = (function (Map) {
     Map.allStops           = null;
     Map.directionsService  = new google.maps.DirectionsService();
     Map.directionsRenderer = new google.maps.DirectionsRenderer();
+    Map.maxPopularity      = 0;
+    Map.minPopularity      = 0;
 
     Map.initializeStopMarkers = function(stops) {
         if (Map.allStops !== null) {
             return;
         }
 
-        console.log ('got here');
+        console.log ('All stops received');
         Map.allStops = stops;
 
         // Draw every bus stop (temporary)
@@ -24,7 +26,20 @@ var Map = (function (Map) {
             Map.stopMarkers.push(new google.maps.Marker({
                 position: new google.maps.LatLng(stops[i]["stop_lat"], stops[i]["stop_lon"]),
                 title: stops[i]["stop_name"],
-                map: null
+                map: null,
+                icon: new google.maps.MarkerImage(
+                    "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|" + 
+                        Map.colorFromValue(stops[i]['popularity'], 
+                            Map.maxPopularity, 
+                            Map.minPopularity),
+                    new google.maps.Size(21, 34),
+                    new google.maps.Point(0,0),
+                    new google.maps.Point(10, 34)),  
+                shadow: new google.maps.MarkerImage(
+                    "http://chart.apis.google.com/chart?chst=d_map_pin_shadow",
+                    new google.maps.Size(40, 37),
+                    new google.maps.Point(0,0),
+                    new google.maps.Point(12, 35)) 
             }));
 
             bindInfoWindow(Map.stopMarkers[i], Map.map_canvas, infowindow,
@@ -86,10 +101,16 @@ var Map = (function (Map) {
 
     Map.addMarker = function (lat, lng, title, content, openNow, img) {
         var infowindow = new google.maps.InfoWindow({ content: 'incoming...' });
+        var colour = 'ff0000'; // red
         var marker = new google.maps.Marker({
             position: new google.maps.LatLng(lat, lng),
             title: title,
-            map: Map.map_canvas
+            map: Map.map_canvas,
+            icon: new google.maps.MarkerImage(
+                "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|" + colour,
+                new google.maps.Size(21, 34),
+                new google.maps.Point(0,0),
+                new google.maps.Point(10, 34)) 
         });
         Map.customMarkers.push(marker);
         google.maps.event.addListener(marker, 'click', function () {
@@ -164,6 +185,51 @@ var Map = (function (Map) {
         Map.map_canvas.fitBounds(bounds);
     };
 
+    // Modified from  
+    // stackoverflow.com/questions/2374959/algorithm-to-convert-any-positive-integer-to-an-rgb-value
+    Map.colorFromValue = function (value, max, min) {
+        var RGB = {R:0,G:0,B:0};
+
+        value = value / (max - min) || 0;
+
+        // y = mx + b
+        // m = 4
+        // x = value
+        // y = RGB._
+        if (0 <= value && value <= 1/8) {
+            RGB.R = 0;
+            RGB.G = 0;
+            RGB.B = 4*value + .5; // .5 - 1 // b = 1/2
+        } else if (1/8 < value && value <= 3/8) {
+            RGB.R = 0;
+            RGB.G = 4*value - .5; // 0 - 1 // b = - 1/2
+            RGB.B = 0;
+        } else if (3/8 < value && value <= 5/8) {
+            RGB.R = 4*value - 1.5; // 0 - 1 // b = - 3/2
+            RGB.G = 1;
+            RGB.B = -4*value + 2.5; // 1 - 0 // b = 5/2
+        } else if (5/8 < value && value <= 7/8) {
+            RGB.R = 1;
+            RGB.G = -4*value + 3.5; // 1 - 0 // b = 7/2
+            RGB.B = 0;
+        } else if (7/8 < value && value <= 1) {
+            RGB.R = -4*value + 4.5; // 1 - .5 // b = 9/2
+            RGB.G = 0;
+            RGB.B = 0;
+        } else {    // should never happen - value > 1
+            RGB.R = .5;
+            RGB.G = 0;
+            RGB.B = 0;
+        }
+
+        // scale for hex conversion
+        RGB.R *= 15;
+        RGB.G *= 15;
+        RGB.B *= 15;
+
+        return Math.round(RGB.R).toString(16)+''+Math.round(RGB.G).toString(16)+''+Math.round(RGB.B).toString(16);
+    }; 
+
     return Map;
 }(Map || {}));
 
@@ -187,7 +253,9 @@ $(window).scroll(function () {
 
 $(document).ready( function() {
     $.post('/getAllStopsFromDb', {}).done( function(result) {
-        Map.initializeStopMarkers(result);
+        var routes = result;
+        
+        Map.initializeStopMarkers(routes);
     });
     
 });
