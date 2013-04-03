@@ -18,7 +18,7 @@ exports.getAllStops = function(req, res) {
     console.log('Getting all stops');
 	StopsDb.find().toArray(function (err, result) {
 		console.log('Sending all stops');
-        res.send(result)
+        res.json(result);
 	});
 }
 
@@ -49,6 +49,20 @@ exports.addUserFavRoute = function(req, res) {
         UsersDb.update( {'username': req.session.username }, {$set: {'favStops': Array.prototype.slice.call(newFavStops)}});
     });
     res.send('Successfully Added Fav Route');
+}
+
+exports.removeUserFavRoute = function(req, res) {
+    UsersDb.find({'username': req.session.username}).toArray(function(err, result) {        
+        var newFavStops = Array.prototype.slice.call(result[0].favStops);
+        for (var i = 0; i < newFavStops.length; i++) {
+            if (newFavStops[i].stopID === req.body.stopID && newFavStops[i].routeID === req.body.routeID) {
+                newFavStops.splice(i, 1);
+                break;
+            }
+        } 
+        UsersDb.update( {'username': req.session.username }, {$set: {'favStops': Array.prototype.slice.call(newFavStops)}});
+    });
+    res.send('Successfully Removed Fav Route');
 }
 
 exports.getUserFavRoutes = function(req, res) {
