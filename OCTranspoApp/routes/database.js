@@ -91,20 +91,3 @@ exports.getUserFavRoutes = function(req, res) {
         res.send(userFavStops);
     });    
 }
-
-//exports.incrementPop = function (stopID)
-
-
-
-/*
-db.collection('stops').find({stop_code: 1225}).toArray(function (err, result) {
-	if (result[0] === undefined)
-	{
-		db.collection('stops').insert({stop_code: 1225, pop: 1});
-	}
-	var oldpop = result[0].pop;
-
-	db.collection('stops').update({stop_code: 1225}, {$set: {pop: oldpop + 1}});
-
-});
-*/

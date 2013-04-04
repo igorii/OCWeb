@@ -1,6 +1,11 @@
 Files
 =====
 
+We have created new files on both the client and the server sides, and changed some of the given files as well.  
+
+Client
+======
+
 User.js
 -------
 
@@ -31,4 +36,35 @@ ClientMap.js
 ------------
 
 ClientMap.js is a module the returns a Map object. The Map object is responsible for all manipulations to Google Maps. This includes the initialization of the map canvas, as well as all Marker and InfoBox manipulations. The Map object contains an array called `allStops`, which stores all the GPS data for every stop available. This is requested from the server on initialization. Once received, the stop markers are immediately initialized, though their map is set to null. Map
-then shows and hides stops markers as necessary by setting their `map` property to the canvas, or to null.
+then shows and hides stops markers as necessary by setting their `map` property to the canvas, or to null.  
+
+
+Server
+======
+
+User.js
+-------
+
+This file defines the node module on the that is responsible for everything user-related. It handles user registration, login, logout, and checking whether the user is logged in already from the session. The module talks to the database to find out whether the user exists, login password is valid, checks session to see if user is logged in, etc.  
+
+Map.js
+------
+
+Map.js defines the main node module which renders the jade views and serves them upon first visit to the site, as well as containing bus lookup functionality. When serving the jade view, it first determines whether the request was from a mobile device or not then renders and serves the appropriate view.  
+
+For routes and trips, it exposes functions that contact OCTranspo through their API to get stop summaries and route times.  
+
+
+Database.js
+-----------
+
+Database.js define the node module that handles everything database related, from connecting to the database to accessing/modifying the database.
+
+### Mongoskin
+
+We use a wrapper around the native node-mongodb API called Mongoskin, which allows us to access the database using commands nearly identical to those availble in the mongo shell such as db.createCollection(), db.xxxx.find(0), etc.  
+
+This node module exposes functions that allows us to get all stop data (stored as JSON objects), stop popularity, user information, create a new user, get, add, and remove favourite routes for a user.
+
+
+
