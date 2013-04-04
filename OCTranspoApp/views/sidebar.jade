@@ -1,5 +1,6 @@
 div#sidebar
-    h1 OC Transpo App
+    div(onclick="Sidebar.switchMode(Sidebar.modes.ABOUT)")
+        h1 OC Transpo App
     br
     div#buttonCtrl
         button(class='btn btn-custom', onclick="Sidebar.switchMode(Sidebar.modes.SUMMARY)",
@@ -64,7 +65,16 @@ div#sidebar
             div#userPanel   
 
         div#userContentLoggedIn
-            div#userPanelLoggedIn    
+            div#userPanelLoggedIn
+
+        div#aboutContent
+            h3 About Us
+            div
+                br
+                p Designed for COMP2406 at Carleton University
+                br
+                p Tim Thornton 100822254 
+                p Sehwan Lee 100835325
 
 script(src='/js/sidebar.js')
 script(src='/js/user.js')
