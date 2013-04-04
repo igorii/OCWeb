@@ -7,6 +7,7 @@ var Sidebar = (function (Sidebar) {
     Sidebar.lastRouteMarker = null;
     Sidebar.modes = {  SUMMARY:0, DIRECTIONS:1, USER:2 };
     Sidebar.currMode = Sidebar.modes.SUMMARY;
+    Sidebar.currentStop = 0;
 
     Sidebar.createSecondary = function() {
 
@@ -198,6 +199,8 @@ var Sidebar = (function (Sidebar) {
             var str;
             var results = [];
 
+            Sidebar.currentStop = stopID;
+
             // Clear results from previous stop
             deleteChildrenById('routeResults');
 
@@ -238,19 +241,20 @@ var Sidebar = (function (Sidebar) {
         deleteChildrenById(id);
         results.innerHTML = '<b>' + title + '</b>';
 
-        var handleMouseOver = function () { this.style.background = '#FFFEBF'; };
-        var handleMouseOut  = function () { this.style.background = '#FFF'; };
+        var handleMouseOver = function () { this.style.background = '#666'; };
+        var handleMouseOut  = function () { this.style.background = '#2D2D2D'; };
 
         for (var i = 0, j = array.length; i < j; ++i) {
             var div = document.createElement('div');
             
-            // Print the favourit star
+            // Print the favourite star
             if (User.isLoggedIn() && clickable) {
                 var route = parseInt(array[i]);
-                if (User.hasFavouriteRoute(parseInt(stopID), route))
-                    div.innerHTML += '<i id="route-' + route + '" class="icon-star"></i> ';
+                if (User.hasFavouriteRoute(stopID, route))
+                    div.innerHTML += '<i id="route-' + route + '" class="icon-star" onclick="Sidebar.removeFavRoute(' + stopID + ',' + route + ')"></i> ';
                 else
                     div.innerHTML += '<i id="route-' + route + '" class="icon-star-empty" onclick="Sidebar.addFavRoute(' + stopID + ',' + route + ')"></i> ';
+                div.innerHTML += '&nbsp&nbsp';
             }
             
             div.innerHTML += array[i];
@@ -275,17 +279,43 @@ var Sidebar = (function (Sidebar) {
     Sidebar.addFavRoute = function (stopID, routeID) {
         // Add the favourite stop to the user
         User.addFavRoute(stopID, routeID);
+        Sidebar.addFavRouteButton(stopID, routeID);
+    };
 
+    Sidebar.removeFavRoute = function(stopID, routeID) {
+        // Remove the favourite stop from user
+        User.removeFavRoute(stopID, routeID);
+        Sidebar.removeFavRouteButton(stopID, routeID);
+    };
+
+    Sidebar.addFavRouteButton = function(stopID, routeID) {       
         // Fill in star
         $('#route-' + routeID).attr('class', 'icon-star');
+        $('#route-' + routeID).attr('onClick', 'Sidebar.removeFavRoute(' + stopID + ',' + routeID + ')');
 
-        // Add new favourite to sidebar 
+        // Add new favourite to sidebar
         var newFav = document.createElement('button');
+        newFav.className = 'btn btn-custom';
         newFav.innerHTML = stopID + ':' + routeID;
-        
+
         // Bind action to new button
         newFav.onclick = function () { Sidebar.getTrips(stopID, routeID); };
         document.getElementById('favRoutes').appendChild(newFav);
+    };
+
+    Sidebar.removeFavRouteButton = function(stopID, routeID) {
+        // Unfill star
+        $('#route-' + routeID).attr('class', 'icon-star-empty');
+        $('#route-' + routeID).attr('onClick', 'Sidebar.addFavRoute(' + stopID + ',' + routeID + ')');
+
+        for (var i = document.getElementById('favRoutes').children.length - 1; i >= 0; i--) {
+            var button = document.getElementById('favRoutes').children[i];
+            var routeAndStop = button.innerHTML.split(':');
+            if (routeAndStop[0] === String(stopID) && routeAndStop[1] === String(routeID)) {
+
+                document.getElementById('favRoutes').removeChild(button);
+            }
+        }
     };
 
     Sidebar.submitStop = function(newQuery) {

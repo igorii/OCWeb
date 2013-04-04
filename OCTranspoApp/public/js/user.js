@@ -10,11 +10,23 @@ var User = (function (User) {
         // Load favourite routes if logged in.
         if (loggedin) {
             $.post('/getFavRoutes').done(function(result) {
-                console.log("WARG: " +  result);
                 User.favRoutes = result;
+                User.initializeFavButtons();
             });
         }
     });
+
+    User.initializeFavButtons = function() {
+        if (User.favRoutes.length > 0) {
+            for (var i = 0; i < User.favRoutes.length; i++) {
+                Sidebar.addFavRouteButton(User.favRoutes[i].stopID, User.favRoutes[i].routeID);
+
+                // Fill in star
+                $('#route-' + User.favRoutes[i].routeID).attr('class', 'icon-star');
+                $('#route-' + User.favRoutes[i].routeID).attr('onClick', 'Sidebar.removeFavRoute(' + User.favRoutes[i].stopID + ',' + User.favRoutes[i].routeID + ')');              
+            }
+        }
+    };
 
 	User.isLoggedIn  = function () { return loggedin; };
     User.register    = function (username, password1, password2) { 
@@ -59,11 +71,18 @@ var User = (function (User) {
         		case 'Login Successful':
         			loggedin = true;
         			document.username = username;
+
+                    //Get favourite routes and display em
+                    $.post('/getFavRoutes').done(function(result) {
+                        User.favRoutes = result;
+                        User.initializeFavButtons();
+                    });
         			User.renderLoggedInPanel();
         			break;
         	}
 
             document.getElementById('userPanel').innerHTML = result;
+            if (Sidebar.currentStop) Sidebar.getSummary(Sidebar.currentStop);
         }); 
 	};
 
@@ -77,19 +96,23 @@ var User = (function (User) {
             User.favStops = [];
 
     		$('#userPanelLoggedIn').html('');
+            $('#favRoutes').html('');
 
     		$('#userContent').css({visibility:'visible'});
             $('#userContentLoggedIn').css({visibility:'hidden'});
+
+            if (Sidebar.currentStop) Sidebar.getSummary(Sidebar.currentStop);
             return;
         });
 	};
 
     // Check whether a given route is in the users favourites or not
     User.hasFavouriteRoute = function (stopID, routeID) {
+        if (User.favRoutes.length === 0) return false;
         var i, j;
         for (i = 0, j = User.favRoutes.length; i < j; ++i)
-            if (User.favRoutes[i].stopID === stopID &&
-                User.favRoutes[i].routeID === routeID)
+            if (User.favRoutes[i].stopID === String(stopID) &&
+                User.favRoutes[i].routeID === String(routeID))
                 return true;
         
         return false;
@@ -113,10 +136,22 @@ var User = (function (User) {
     User.addFavRoute = function (stopID, routeID) {
         if (User.hasFavouriteRoute(stopID, routeID)) return;
         
-        var route = { 'stopID': stopID, 'routeID': routeID };
+        var route = { 'stopID': String(stopID), 'routeID': String(routeID) };
         User.favRoutes.push(route);
 
         $.post('addFavRoute', {'stopID': stopID, 'routeID': routeID}).done(function() {}); 
+    };
+
+    User.removeFavRoute = function(stopID, routeID) {
+        if (User.favRoutes.length === 0) return;
+
+        for (var i = 0; i < User.favRoutes.length; i++) {
+            if (User.favRoutes[i].stopID === String(stopID) && 
+                User.favRoutes[i].routeID === String(routeID)) {
+                User.favRoutes.splice(i, 1);
+            }
+        }
+        $.post('removeFavRoute', {'stopID': stopID, 'routeID': routeID}).done(function() {});
     };
 
 	User.renderLoggedInPanel = function () {
@@ -125,7 +160,7 @@ var User = (function (User) {
 		$('#userContent').css({visibility:'hidden'});
         $('#userContentLoggedIn').css({visibility:'visible'});
 
-		var html = '<button onclick="" title="Logout" id="logout" class="btn">Logout</button>';
+		var html = '<button onclick="" title="Logout" id="logout" class="btn btn-custom">Logout</button>';
 		document.getElementById('userPanelLoggedIn').innerHTML = html;
 		$('#logout').click(User.logout);
 	};

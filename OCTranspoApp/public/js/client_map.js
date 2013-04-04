@@ -190,6 +190,10 @@ var Map = (function (Map) {
     Map.colorFromValue = function (value, max, min) {
         var RGB = {R:0,G:0,B:0};
 
+        if (value === max) {
+            max++;
+        }
+
         value = value / (max - min) || 0;
 
         // y = mx + b
@@ -253,8 +257,8 @@ $(window).scroll(function () {
 
 $(document).ready( function() {
     $.post('/getAllStopsFromDb', {}).done( function(result) {
-        var routes = result;
-        
+        var routes = result.routes;       
+        Map.maxPopularity = result.max[0]['value'];
         Map.initializeStopMarkers(routes);
     });
     
