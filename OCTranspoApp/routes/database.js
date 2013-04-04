@@ -10,22 +10,41 @@ var StopsDb = db.collection('stops');
 //var RoutesDb = db.collection('routes');
 //var TripsDb = db.collection('trips');
 var UsersDb = db.collection('users');
+var MaxPop = db.collection('maxPop');
 
 // Store stop data as JSON in memory
 var stopData;
 
 exports.getAllStops = function(req, res) {
     console.log('Getting all stops');
-	StopsDb.find().toArray(function (err, result) {
+	StopsDb.find().toArray(function (err, routes) {
 		console.log('Sending all stops');
-        res.json(result);
+        MaxPop.find(0).toArray(function (err, maxPop) {
+            res.json( {'max': maxPop, 'routes': routes} );
+        });
 	});
 }
 
 exports.getStopPopularity = function(stopID) {
-    StopsDb.find({ stop: stopID }).toArray(function (err, result) {
+    StopsDb.find({ stop_code: stopID }).toArray(function (err, result) {
     	if (err) throw err;
         return result[0].popularity;
+    });
+}
+
+exports.incrementStopPop = function(stopID) {
+    console.log("WARG");
+    StopsDb.find( {stop_code: Number(stopID) } ).toArray(function (err, result) {
+        if (err) throw err;
+        var newPop = result[0].popularity + 1;
+        console.log("Updating stop " + stopID + " pop to newPop: " + newPop);
+        StopsDb.update({stop_code: Number(stopID)}, {$set: { popularity: newPop } });
+
+        MaxPop.find(0).toArray(function (err, maxPop) {
+            if (newPop > maxPop[0]['value']) {
+                MaxPop.update({}, { value: newPop} );    
+            }            
+        });
     });
 }
 
