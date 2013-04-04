@@ -166,7 +166,7 @@ var Sidebar = (function (Sidebar) {
                 bounds.push(Sidebar.lastRouteMarker);
 
                 // Check whether magic google maps position variables are set
-                if (Sidebar.lastRouteMarker && Sidebar.lastBusMarker)
+                if (false)
                     Map.zoomToMarkers(bounds);
             }
 
