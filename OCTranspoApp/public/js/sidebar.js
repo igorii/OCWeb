@@ -20,7 +20,6 @@ var Sidebar = (function (Sidebar) {
             left: 390 + 'px',
             position: 'absolute',
             height: 100 + '%',
-            'background-color': '#fff',
             width: 0 + 'px'
         });
 
@@ -167,7 +166,7 @@ var Sidebar = (function (Sidebar) {
                 bounds.push(Sidebar.lastRouteMarker);
 
                 // Check whether magic google maps position variables are set
-                if (bounds[0].position.hb && bounds[1].position.hb)
+                if (Sidebar.lastRouteMarker && Sidebar.lastBusMarker)
                     Map.zoomToMarkers(bounds);
             }
 
@@ -379,8 +378,8 @@ var Sidebar = (function (Sidebar) {
             deleteChildrenById('stopMatchResults');
             results.innerHTML = '<b>Stop Matches</b>';
 
-            var handleMouseOver = function () { this.style.background = '#FFFEBF'; };
-            var handleMouseOut  = function () { this.style.background = '#FFF'; };
+            var handleMouseOver = function () { this.style.background = '#666'; };
+            var handleMouseOut  = function () { this.style.background = '#4D4D4D'; };
 
             for (var i = 0, j = array.length; i < j; ++i) {
                 var div = document.createElement('div');
