@@ -2,13 +2,13 @@ div#sidebar
     h1 OC Transpo App
     br
     div#buttonCtrl
-        button(class='btn', onclick="Sidebar.switchMode(Sidebar.modes.SUMMARY)",
+        button(class='btn btn-custom', onclick="Sidebar.switchMode(Sidebar.modes.SUMMARY)",
             title='Get trips for a single route')
             span(class='icon-arrow-down')
-        button(class='btn', onclick="Sidebar.switchMode(Sidebar.modes.DIRECTIONS)",
+        button(class='btn btn-custom', onclick="Sidebar.switchMode(Sidebar.modes.DIRECTIONS)",
             title='Get transit directions')
             span(class='icon-road')
-        button(class='btn', onclick="Sidebar.switchMode(Sidebar.modes.USER)",
+        button(class='btn btn-custom', onclick="Sidebar.switchMode(Sidebar.modes.USER)",
             title='Access user information')
             span(class='icon-user')
     br
@@ -18,7 +18,7 @@ div#sidebar
             h5 Get route summary for stop
             div.input-append
                 input(type='text', id='stopID', class='sidebarText', placeholder="Stop ID or Name…")
-                button(id='submitStopByID', class='btn') Go
+                button(id='submitStopByID', class='btn btn-custom') Go
             br
             div#addFavStopContainer
             br
@@ -31,36 +31,36 @@ div#sidebar
 
         div#directionsContent
             h5 Get directions
-            div.input-append
+            div
                 input(type='text', id='directionsTo', class='sidebarText', placeholder="From…")
                 br
                 input(type='text', id='directionsFrom', class='sidebarText', placeholder="To…")
                 br
-                button(id='getDirections', class='btn') Go
+                button(id='getDirections', class='btn btn-custom') Go
             br
             div#directionsResults
 
         div#userContent
-            h5 User options
+            h3 User options
             br
             h4 Login
-            div#userInputs.input-append
+            div#userInputs
                 input(type='text', id='loginName', class='sidebarText', placeholder="Username")
                 br
                 input(type='password', id='loginPassword', class='sidebarText', placeholder="Password")
                 br
-                button(id='login', class='btn') Login
+                button(id='login', class='btn btn-custom') Login
             br
             br
             h4 Register
-            div#userInputsRegister.input-append
+            div#userInputsRegister
                 input(type='text', id='registerName', class='sidebarText', placeholder="Username")
                 br
                 input(type='password', id='registerPassword1', class='sidebarText', placeholder="Password")
                 br
                 input(type='password', id='registerPassword2', class='sidebarText', placeholder="Confirm password")
                 br
-                button(id='register', class='btn') Register
+                button(id='register', class='btn btn-custom') Register
             div#userPanel   
 
         div#userContentLoggedIn

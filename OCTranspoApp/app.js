@@ -64,6 +64,7 @@ app.post('/logout', user.userLogout);
 app.post('/loggedIn', user.loggedIn);
 app.post('/addFavRoute', database.addUserFavRoute);
 app.post('/getFavRoutes', database.getUserFavRoutes);
+app.post('/removeFavRoute', database.removeUserFavRoute);
 
 http.createServer(app).listen(app.get('port'), function(){
     console.log("Express server listening on port " + app.get('port'));
