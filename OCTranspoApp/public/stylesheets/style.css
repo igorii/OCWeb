@@ -22,6 +22,21 @@ h1 {
     color: #F99157;
 }
 
+.infobox-wrapper {
+    display: none;
+}
+
+#infobox {
+    border: 2px solid black;
+    margin-top: 8px;
+    background: #2D2D2D;
+    color: #aaa;
+    padding: .5em 1em;
+    border-radius: 2px;
+    text-shadow: 0 -1px #000000;
+    box-shadow: 0 0 8px #000000;
+}
+
 #stopID, #directionsTo, #directionsFrom, #loginName, #loginPassword,
     #registerName, #registerPassword1, #registerPassword2  {
     background: #404040;
@@ -43,9 +58,16 @@ h1 {
 
 #sidebar {
     float: left;
-    width: 400px;
+    width: 380px;
     padding: 10px;
     background-color: rgba(0, 0, 0, 0);
+}
+
+#sidebar2 {
+    padding: 10px;
+    background-color: #4D4D4D;
+    border-left:  solid #F99157;
+    border-right: solid #F99157;
 }
 
 #buttonCtrl {

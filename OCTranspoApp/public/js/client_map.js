@@ -11,6 +11,25 @@ var Map = (function (Map) {
     Map.directionsRenderer = new google.maps.DirectionsRenderer();
     Map.maxPopularity      = 0;
     Map.minPopularity      = 0;
+    Map.ctrl               = null;
+
+    Map.getNewInfoBox = function () {
+        return new InfoBox({
+            content: document.getElementById('infobox'),
+            disableAutoPan: false,
+            maxWidth: 150,
+            pixelOffset: new google.maps.Size(-140, 0),
+            zIndex: null,
+            boxStyle: {
+                background: "url('http://google-maps-utility-library-v3.googlecode.com/svn/trunk/infobox/examples/tipbox.gif') no-repeat",
+                opacity: 0.75,
+                width: "280px"
+            },
+            closeBoxMargin: "12px 4px 2px 2px",
+            closeBoxURL: "http://www.google.com/intl/en_us/mapfiles/close.gif",
+            infoBoxClearance: new google.maps.Size(1, 1)
+        });
+    }
 
     Map.initializeStopMarkers = function(stops) {
         if (Map.allStops !== null) {
@@ -19,6 +38,9 @@ var Map = (function (Map) {
 
         console.log ('All stops received');
         Map.allStops = stops;
+        Map.ctrl.remove();
+    
+        var infobox = Map.getNewInfoBox();
 
         // Draw every bus stop (temporary)
         var infowindow = new google.maps.InfoWindow({ content: 'incoming...' });
@@ -53,8 +75,13 @@ var Map = (function (Map) {
         // Function used to bind infowindow to each marker
         function bindInfoWindow(marker, map, infowindow, html) {
             google.maps.event.addListener(marker, 'click', function() {
-                infowindow.setContent(html);
-                infowindow.open(map, marker);
+                console.log(html);
+                var x = document.createElement('div');
+                x.id = 'infobox';
+                x.innerHTML = html;
+                infobox.setContent(x);
+                infobox.open(map, marker);
+                    
             });
         }
     }
@@ -86,6 +113,9 @@ var Map = (function (Map) {
         Map.map_canvas = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
         Map.directionsRenderer.setMap(Map.map_canvas);
         Map.directionsRenderer.setPanel(document.getElementById('directionsResults'));
+    
+        // Insert loading marker
+        Map.ctrl = getBusyOverlay($('#map_canvas')[0], {}, {size:48});
     };
 
     Map.setCenter = function (lat, lng) {
@@ -101,6 +131,7 @@ var Map = (function (Map) {
 
     Map.addMarker = function (lat, lng, title, content, openNow, img) {
         var infowindow = new google.maps.InfoWindow({ content: 'incoming...' });
+        var infobox = Map.getNewInfoBox();
         var colour = 'ff0000'; // red
         var marker = new google.maps.Marker({
             position: new google.maps.LatLng(lat, lng),
@@ -113,16 +144,18 @@ var Map = (function (Map) {
                 new google.maps.Point(10, 34)) 
         });
         Map.customMarkers.push(marker);
-        google.maps.event.addListener(marker, 'click', function () {
-           infowindow.setContent(content);
-           infowindow.open(Map.map_canvas, marker);
+        google.maps.event.addListener(marker, 'click', function() {
+            var x = document.createElement('div');
+            x.id = 'infobox';
+            x.innerHTML = content;
+            infobox.setContent(x);
+            infobox.open(Map.map_canvas, marker);
+                
         });
 
         // If true, immediately open the infowindow
-        if (openNow) {
-            infowindow.setContent(content);
-            infowindow.open(Map.map_canvas, marker);
-        }
+        if (openNow)
+            new google.maps.event.trigger(marker, 'click');
 
         return marker;
     };
@@ -160,6 +193,7 @@ var Map = (function (Map) {
         if (byIndex) {
             marker = Map.stopMarkers[id];
             marker.setMap(map);
+            new google.maps.event.trigger( marker, 'click' );
             return marker;
         }
 
@@ -167,6 +201,7 @@ var Map = (function (Map) {
             if (id === Map.allStops[i]['stop_code']) {
                 marker = Map.stopMarkers[i];
                 marker.setMap(map);
+                new google.maps.event.trigger( marker, 'click' );
                 return marker;
             }
         }
@@ -256,7 +291,8 @@ $(window).scroll(function () {
 });
 
 $(document).ready( function() {
-    $.post('/getAllStopsFromDb', {}).done( function(result) {
+        
+        $.post('/getAllStopsFromDb', {}).done( function(result) {
         var routes = result.routes;       
         Map.maxPopularity = result.max[0]['value'];
         Map.initializeStopMarkers(routes);
