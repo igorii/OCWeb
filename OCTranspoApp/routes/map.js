@@ -9,7 +9,8 @@
     var request = require('request')
         , xml2js = require('xml2js')
         , ocTranspoKey = '3dbaa821f9f7dbc2cd5ec52f8ceaff63'
-        , ocTranspoID = '59bd2043';
+        , ocTranspoID = '59bd2043'
+        , database = require('./database');
 
     // main handler for get requests to /
     exports.home = function(req, res) {
@@ -29,6 +30,8 @@
     // handler for getting trips
     exports.getSummary = function(req, res) {
         console.log('Incoming request for stop - ' + req.body.stopID);
+
+        database.incrementStopPop(req.body.stopID);
 
         // Generate POST request body
         var body = 'appID=' + ocTranspoID + '&apiKey=' + ocTranspoKey;
@@ -56,7 +59,7 @@
 
     // handler for getting trips
     exports.getTrips = function(req, res) {
-        console.log('Incoming request for stop - ' + req.body.stopID);
+        console.log('Incoming request for stop - ' + req.body.stopID);       
 
         // Generate POST request body
         var body = 'appID=' + ocTranspoID + '&apiKey=' + ocTranspoKey;
