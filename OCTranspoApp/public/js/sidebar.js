@@ -5,7 +5,7 @@ var Sidebar = (function (Sidebar) {
     Sidebar.lastRoute       = null;
     Sidebar.lastBusMarker   = null;
     Sidebar.lastRouteMarker = null;
-    Sidebar.modes = {  SUMMARY:0, DIRECTIONS:1, USER:2 };
+    Sidebar.modes = {  SUMMARY:0, DIRECTIONS:1, USER:2, ABOUT:3 };
     Sidebar.currMode = Sidebar.modes.SUMMARY;
     Sidebar.currentStop = 0;
 
@@ -82,6 +82,9 @@ var Sidebar = (function (Sidebar) {
                 else
                     oldContent = $('#userContent');
                 break;
+            case Sidebar.modes.ABOUT:
+                oldContent = $('#aboutContent');
+                break;
         }
 
         // Get the new div and show it and set the new mode
@@ -100,6 +103,10 @@ var Sidebar = (function (Sidebar) {
                 else
                     newContent = $('#userContentLoggedIn');
                 Sidebar.currMode = Sidebar.modes.USER;
+                break;
+            case Sidebar.modes.ABOUT:
+                newContent = $('#aboutContent');
+                Sidebar.currMode = Sidebar.modes.ABOUT;
                 break;
         }
 

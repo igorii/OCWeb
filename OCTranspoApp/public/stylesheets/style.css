@@ -19,7 +19,12 @@ html {
 
 h1 {
     text-align: center;
-    color: #F99157;
+    color: #F99157;    
+}
+
+h1:hover {
+    color: #6699CC;
+    cursor:pointer;
 }
 
 .infobox-wrapper {
@@ -105,6 +110,12 @@ h1 {
     position: absolute;
     top: 130px;
     width: 350px;
+    visibility: hidden;
+}
+
+#aboutContent {
+    position: absolute;
+    top: 130px;
     visibility: hidden;
 }
 
