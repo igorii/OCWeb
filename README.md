@@ -58,11 +58,11 @@ Milestones
 * Implement general features excluding user profiles
 * Implement simplistic mobile front end
 
-**March 18**
+~~**March 18**~~
 *Working prototype/demo*
 * Provide working prototype of web application including front end from desktop/mobile clients, back end service, and database analysis
 
-**March 25**
+~~**March 25**~~
 *User profiles*
 * Implement ability to log in to app from mobile/desktop
 * Store favourites and logs in database
