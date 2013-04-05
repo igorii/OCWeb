@@ -3,6 +3,16 @@ Files
 
 We have created new files on both the client and the server sides, and changed some of the given files as well.  
 
+* [Client](#client)
+    * [User.js](#userjs) 
+    * [Sidebar.js](#sidebarjs) 
+    * [FloatingCtrl.js](#floatingctrljs) 
+    * [ClientMap.js](#clientmapjs) 
+* [Server](#server)
+    * [User.js](#userjs-1) 
+    * [Map.js](#mapjs) 
+    * [Database.js](#databasejs) 
+
 Client
 ======
 
@@ -11,6 +21,8 @@ User.js
 
 User.js defines a module that creates a User object. The User object is responsible for all user related operations, including logging in/out, favourite stop/route management, and user registration. All communication to the `users` and `sessions` collections in the database is also done through this object. In this way all user management on the client is done through a single object. A private variable maintaining the logged in status of the application is maintained in the
 User object. This prevents users from manually switching state, although the would gain no information by doing so. 
+
+[top](#files)
 
 Sidebar.js
 ----------
@@ -27,16 +39,22 @@ names and a link is presented which directs the user to the OC Transpo website.
 
 As a single Page App, there is a great deal of DOM manipulation that needs to be done in order to mimic state changes. We implemented this functionality through a series of hidden divs, where only the div corresponding to the current state is displayed. The Sidebar manages the displaying and hiding of divs when the context/mode is changed.
 
+[top](#files)
+
 FloatingCtrl.js
 ---------------
 
 FloatingCtrl is a simple object that is created from the FloatingCtrl.js file. This object defines the behaviour for any map control buttons that appear in the control div in the bottom right of the application. Currently, the only map control provided is the ability to show/hide all available stops.  
+
+[top](#files)
 
 ClientMap.js
 ------------
 
 ClientMap.js is a module the returns a Map object. The Map object is responsible for all manipulations to Google Maps. This includes the initialization of the map canvas, as well as all Marker and InfoBox manipulations. The Map object contains an array called `allStops`, which stores all the GPS data for every stop available. This is requested from the server on initialization. Once received, the stop markers are immediately initialized, though their map is set to null. Map
 then shows and hides stops markers as necessary by setting their `map` property to the canvas, or to null.  
+
+[top](#files)
 
 
 Server
@@ -47,6 +65,8 @@ User.js
 
 This file defines the node module on the that is responsible for everything user-related. It handles user registration, login, logout, and checking whether the user is logged in already from the session. The module talks to the database to find out whether the user exists, login password is valid, checks session to see if user is logged in, etc.  
 
+[top](#files)
+
 Map.js
 ------
 
@@ -54,6 +74,7 @@ Map.js defines the main node module which renders the jade views and serves them
 
 For routes and trips, it exposes functions that contact OCTranspo through their API to get stop summaries and route times.  
 
+[top](#files)
 
 Database.js
 -----------
@@ -66,5 +87,5 @@ We use a wrapper around the native node-mongodb API called Mongoskin, which allo
 
 This node module exposes functions that allows us to get all stop data (stored as JSON objects), stop popularity, user information, create a new user, get, add, and remove favourite routes for a user.
 
-
+[top](#files)
 
