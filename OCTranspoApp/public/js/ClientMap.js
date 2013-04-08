@@ -115,7 +115,8 @@ var Map = (function (Map) {
         Map.directionsRenderer.setPanel(document.getElementById('directionsResults'));
     
         // Insert loading marker
-        Map.ctrl = getBusyOverlay($('#map_canvas')[0], {}, {size:48});
+        if (Map.allStops == null)
+            Map.ctrl = getBusyOverlay($('#map_canvas')[0], {}, {size:48});
     };
 
     Map.setCenter = function (lat, lng) {
