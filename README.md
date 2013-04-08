@@ -74,3 +74,8 @@ Milestones
 
 **April 8**
 *Final code and documentation (April 10th)*
+
+Example Screenshot
+------------------
+
+![Searching for Bayshore stations](/Images/ocApp.png "Searching for Bayshore stations")
