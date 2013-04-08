@@ -165,7 +165,7 @@ var Sidebar = (function (Sidebar) {
 
                 // Create the bus marker
                 var marker = Map.addMarker(bus.lat, bus.lng,
-                                 "HELLLOOOO",
+                                 "Bus",
                                  str,
                                  true, null);
                 Sidebar.lastBusMarker = marker;
@@ -173,7 +173,7 @@ var Sidebar = (function (Sidebar) {
                 bounds.push(Sidebar.lastRouteMarker);
 
                 // Check whether magic google maps position variables are set
-                if (false)
+                if (bounds[0].position.hb && bounds[1].position.hb)
                     Map.zoomToMarkers(bounds);
             }
 

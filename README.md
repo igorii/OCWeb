@@ -69,7 +69,7 @@ Milestones
 * Implement ability to serve favourites on login
 * Implement stateful application based on login status
 
-**April 1**
+~~**April 1**~~
 *Draft documentation*
 
 **April 8**

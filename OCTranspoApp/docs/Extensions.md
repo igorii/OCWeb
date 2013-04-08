@@ -9,6 +9,7 @@ project.
 * [Icon Set](#icon-set)
 * [User Options](#user-options)
 * [Custom Directions Rendering](#custom-directions-rendering)
+* [Mobile](#mobile)
 
 Full Schedules
 --------------
@@ -51,3 +52,13 @@ Custom Directions Rendering
 Currently, the default Google Maps Directions Service DirectionsRenderer is being used to render directions. This does not use GPS data, which is the focus of our application. Going forward, it would be ideal to render the directions in a way that depicts the GPS data of the buses, and displays possible points of failure in the directions (buses that may not be running, or have not updated their GPS data).
 
 [top](#extensions)
+
+Mobile
+------
+
+We attempted to create a mobile version of our web app, as the content provided would be very useful on the go. Although we were successful in creating an initial prototype, much design and implementation work needs to be done to create a more usable mobile web app. Our prototype (included) is served to any users who are connecting from a mobile browser. The current mobile application features the ability to request stop summaries and bus arrival times from a relatively uncluttered UI.
+
+Directions and user management still needs to be done here, as well as a slew of bug fixing and optimizations.
+
+[top](#extentions)
+
