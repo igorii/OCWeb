@@ -4,41 +4,38 @@ Dependencies
 Client
 ------
 
-### cvi_busy_lib.js
-Netzgestade Non-commercial Software License Agreement
+### [cvi_busy_lib.js](http://www.netzgesta.de/busy/)
+* *Netzgestade Non-commercial Software License Agreement*
+* Used solely for the loading indicator that is rendered over the Google Maps div while waiting for the stop data to be received.
 
-Used solely for the loading indicator that is rendered over the Google Maps div while waiting for the stop data to be received.
+### [jQuery](http://jquery.com/)
+* *MIT License*
+* Used for various DOM scripting.
 
-### jQuery
-MIT License
-
-Used for various DOM scripting.
-
-### Twitter Bootstrap
-Apache License, Version 2.0
-
-Used for UI template, and button glyphicons.
+### [Twitter Bootstrap](http://twitter.github.io/bootstrap/)
+* *Apache License, Version 2.0*
+* Used for UI template, and button glyphicons.
 
 Server
 ------
 
-### Express
-MIT License
+### [Express](http://expressjs.com/)
+* *MIT License*
 
-### Jade
-MIT License
+### [Jade](http://jade-lang.com/)
+* *MIT License*
 
-### Request
-Apache License, Version 2.0
+### [Request](https://github.com/mikeal/request)
+* *Apache License, Version 2.0*
 
-### node-xml2js
+### [node-xml2js](https://github.com/Leonidas-from-XIV/node-xml2js)
 
-### node-mongoskin
-MIT License
+### [mongoskin](https://github.com/kissjs/node-mongoskin)
+* *MIT License*
 
-### connect-mongo
+### [connect-mongo](https://github.com/kcbanner/connect-mongo)
 
 Database
 --------
 
-### MongoDB
+### [MongoDB](http://www.mongodb.org/)
