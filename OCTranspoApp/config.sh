@@ -13,4 +13,6 @@ wget timthornton.net/comp2406/mondb.tar.gz -O database/mondb.tar.gz
 cd database
 tar -zxvf mondb.tar.gz
 rm mondb.tar.gz
+mongod --port 5000 --dbpath ./mondb --upgrade
 cd ..
+

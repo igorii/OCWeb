@@ -4,6 +4,9 @@
 var mongo = require('mongoskin');
 var mdb = require('mongodb');
 var db = mongo.db('localhost:5000/mondb');
+var childProcess = require('child_process');
+var mongoProc;
+
 
 var StopsDb = db.collection('stops');
 //var StopTimesDb = db.collection('stop_times');
@@ -14,6 +17,23 @@ var MaxPop = db.collection('maxPop');
 
 // Store stop data as JSON in memory
 var stopData;
+
+// Start the mongo instance
+mongoProc = childProcess.exec('mongod --port 5000 --dbpath ~/BlinkTag/OCTranspoApp/database/mondb', function (error, stdout, stderr) {
+    if (error) {
+        console.log(error.stack);
+        console.log('Error code: ' + error.code);
+        console.log('Signal received: ' + error.signal);
+    }
+    console.log('Mongo STDOUT: ' + stdout);
+    console.log('Mongo STDERR: ' + stderr);
+   
+    
+});
+
+mongoProc.on('exit', function (code) {
+    console.log('Child process exited with exit code ' + code);
+});
 
 exports.getAllStops = function(req, res) {
     console.log('Getting all stops');

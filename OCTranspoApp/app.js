@@ -3,31 +3,15 @@
  * Module dependencies.
  */
 
-/* Start the mongo instance
-mongoProc = childProcess.exec('mongod --port 5000', function (error, stdout, stderr) {
-if (error) {
-    console.log(error.stack);
-    console.log('Error code: ' + error.code);
-    console.log('Signal received: ' + error.signal);
-}
-console.log('Mongo STDOUT: ' + stdout);
-console.log('Mongo STDERR: ' + stderr);
-});
-
-mongoProc.on('exit', function (code) {
-    console.log('Child process exited with exit code ' + code);
-});
-*/
-
 var express = require('express')
     , map = require('./routes/map')
     , user = require('./routes/user')
     , http = require('http')
     , path = require('path')
     , database = require('./routes/database')
-    , sessions = require('connect-mongo')(express)
-    , childProcess = require('child_process')
-    , mongoProc;
+    , sessions = require('connect-mongo')(express);
+
+var app = express();
 
 var sessionConf = {
     db: {
@@ -38,8 +22,6 @@ var sessionConf = {
     },
     secret: 'aY1dxY7sjnb23Gca077Fh'
 };
-
-var app = express();
 
 app.configure(function(){
     app.set('port', process.env.PORT || 3000);
@@ -69,7 +51,6 @@ app.configure('development', function(){
     app.use(express.errorHandler());
 });
 
-
 // Routes
 app.get('/', map.home);
 app.get('/users', user.list);
@@ -85,5 +66,12 @@ app.post('/getFavRoutes', database.getUserFavRoutes);
 app.post('/removeFavRoute', database.removeUserFavRoute);
 
 http.createServer(app).listen(app.get('port'), function(){   
-    console.log("Express server listening on port " + app.get('port'));
+        console.log("Express server listening on port " + app.get('port'));
 });
+
+
+
+
+
+
+
