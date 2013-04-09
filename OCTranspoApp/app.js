@@ -11,17 +11,17 @@ var express = require('express')
     , database = require('./routes/database')
     , sessions = require('connect-mongo')(express);
 
+var app = express();
+
 var sessionConf = {
     db: {
         db: 'mondb',
         host: '127.0.0.1',
-        port: '27017',
+        port: '5000',
         collection: 'sessions'
     },
     secret: 'aY1dxY7sjnb23Gca077Fh'
 };
-
-var app = express();
 
 app.configure(function(){
     app.set('port', process.env.PORT || 3000);
@@ -44,13 +44,12 @@ app.configure(function(){
     });
 
     app.use(app.router);
-    app.use(express.static(path.join(__dirname, 'public')));
+    app.use(express.static(path.join(__dirname, 'public')));    
 });
 
 app.configure('development', function(){
     app.use(express.errorHandler());
 });
-
 
 // Routes
 app.get('/', map.home);
@@ -66,6 +65,13 @@ app.post('/addFavRoute', database.addUserFavRoute);
 app.post('/getFavRoutes', database.getUserFavRoutes);
 app.post('/removeFavRoute', database.removeUserFavRoute);
 
-http.createServer(app).listen(app.get('port'), function(){
-    console.log("Express server listening on port " + app.get('port'));
+http.createServer(app).listen(app.get('port'), function(){   
+        console.log("Express server listening on port " + app.get('port'));
 });
+
+
+
+
+
+
+
