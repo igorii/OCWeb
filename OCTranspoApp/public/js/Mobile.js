@@ -11,7 +11,6 @@ $(window).ready(function () {
     directionsButton.style.width = width + 'px';
     userButton.style.width = width + 'px';
 
-
     summaryButton.onclick = function () {
         $('#summaryContent').css({visibility:'visible'});
         $('#directionsContent').css({visibility:'hidden'});

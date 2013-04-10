@@ -1,8 +1,14 @@
-var User = (function (User) {
-	var loggedin = false;
+/*
+ * User
+ * Manages login/logout/register functionality, and maintains list of users favourite stops.
+ * Responsible for all communication to the server and database concerning user data.
+ */
 
-    User.favStops = [];
-    User.favRoutes = [];
+var User = (function (User) {
+	var loggedin = false;       // Whether the user is logged in or not
+
+    User.favStops = [];         // A list of the users favourite stops
+    User.favRoutes = [];        // A list of the users favourite bus|stop pairs
 
     // Make initial check whether the user is logged in
     $.post('/loggedIn').done( function(result) { 
@@ -16,6 +22,7 @@ var User = (function (User) {
         }
     });
 
+    // Creates buttons for the users favourite stops on the sidebar
     User.initializeFavButtons = function() {
         if (User.favRoutes.length > 0) {
             for (var i = 0; i < User.favRoutes.length; i++) {
@@ -28,15 +35,19 @@ var User = (function (User) {
         }
     };
 
+    // Returns whether the user is logged in or not using private loggedin variable
 	User.isLoggedIn  = function () { return loggedin; };
+
+    // Registers a new user to the database
     User.register    = function (username, password1, password2) { 
 		$('#registerPassword1').val('');
 		$('#registerPassword2').val('');
 
-        //if (password1 != password2)
-            //TODO: Handle password mismatch
+        if (password1 != password2)
+            return; //TODO:  Let the user know that the passwords did not match
 
-        $.post('register', { 'username': username, 'password': password1 }).done(function(result) {
+        // Post to the database to insert the new user
+        $.post('register', { 'username': username, 'password': password1 }).done(function (result) {
             switch (result) {
                 case 'Success':
                     User.login(username, password1);
@@ -53,9 +64,12 @@ var User = (function (User) {
         });
     };
 
+    // Takes a username and passwords, and authenticates the user by checking their
+    // credentials in the user database. If successful, the user is logged in.
     User.login = function (username, password) {
 		$('#loginPassword').val('');
 
+        // Post to the database to check if the credentials are correct
         $.post('login', { 'username': username, 'password': password }).done(function(result) {
         	switch (result) {
         		case 'User Not Found':
@@ -86,9 +100,11 @@ var User = (function (User) {
         }); 
 	};
 
+    // Handle logging the user out
 	User.logout = function () {
 		if (!loggedin) return;
 
+        // Post to the server to update the servers sessions
         $.post('logout').done(function(result) {
     		document.username = '';
     		loggedin = false;
@@ -133,6 +149,7 @@ var User = (function (User) {
         User.favStops.push(stopID);        
     };
 
+    // Add a favourite route|stop pair to the users list of favourites
     User.addFavRoute = function (stopID, routeID) {
         if (User.hasFavouriteRoute(stopID, routeID)) return;
         
@@ -142,6 +159,7 @@ var User = (function (User) {
         $.post('addFavRoute', {'stopID': stopID, 'routeID': routeID}).done(function() {}); 
     };
 
+    // Remove a route|stop pair from the users list of favourites
     User.removeFavRoute = function(stopID, routeID) {
         if (User.favRoutes.length === 0) return;
 
@@ -154,12 +172,16 @@ var User = (function (User) {
         $.post('removeFavRoute', {'stopID': stopID, 'routeID': routeID}).done(function() {});
     };
 
+    // Renders the User panel for logged in users
+    // Currently, this only displays the logout button
 	User.renderLoggedInPanel = function () {
 		if (!loggedin) return;
 
+        // Hide the login/register panels
 		$('#userContent').css({visibility:'hidden'});
         $('#userContentLoggedIn').css({visibility:'visible'});
 
+        // Create and append the logout button to the loggedin panel
 		var html = '<button onclick="" title="Logout" id="logout" class="btn btn-custom">Logout</button>';
 		document.getElementById('userPanelLoggedIn').innerHTML = html;
 		$('#logout').click(User.logout);
@@ -169,16 +191,19 @@ var User = (function (User) {
 
 }(User || {}));
 
+// If the user clicks Login, handle the login
 $('#login').click(function() {
     User.login($('#loginName').val(), $('#loginPassword').val());
 });
 
+// If the user clicks register, handle the register
 $('#register').click(function() {
     User.register($('#registerName').val(), 
                   $('#registerPassword1').val(),
                   $('#registerPassword2').val());
 });
 
+// Register all text fields to their appropriate actions
 registerEnterPress('#loginName',         '#login');
 registerEnterPress('#loginPassword',     '#login');
 registerEnterPress('#registerName',      '#register');
