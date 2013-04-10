@@ -27,6 +27,26 @@ This application will be primarily used for displaying the real-time locations o
 
 Other features such as displaying traffic irregularities, bus types, bus fares, etc, may be included if time permits.
 
+Download
+--------
+
+##### UNIX
+
+	git clone https://github.com/CarletonU-COMP2406-W2013/BlinkTag.git
+	cd BlinkTag
+	./config.sh
+	
+Run
+-------
+
+##### Single launch
+	
+	sudo node app.js
+	
+##### Persistent launch
+	
+	sudo ./run.sh
+	
 Milestones
 ----------
 
@@ -72,7 +92,7 @@ Milestones
 ~~**April 1**~~
 *Draft documentation*
 
-**April 8**
+~~**April 8**~~
 *Final code and documentation (April 10th)*
 
 Example Screenshot
