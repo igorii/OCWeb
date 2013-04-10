@@ -3,7 +3,7 @@
 
 var mongo = require('mongoskin');
 var mdb = require('mongodb');
-var db = mongo.db('localhost:5000/mondb');
+var db = mongo.db('localhost:27017/mondb');
 var childProcess = require('child_process');
 var mongoProc;
 
@@ -19,7 +19,7 @@ var MaxPop = db.collection('maxPop');
 var stopData;
 
 // Start the mongo instance
-mongoProc = childProcess.exec('mongod --port 5000 --dbpath ~/BlinkTag/OCTranspoApp/database/mondb', function (error, stdout, stderr) {
+mongoProc = childProcess.exec('mongod --port 27017 --dbpath ./database/mondb', function (error, stdout, stderr) {
     if (error) {
         console.log(error.stack);
         console.log('Error code: ' + error.code);
@@ -27,8 +27,6 @@ mongoProc = childProcess.exec('mongod --port 5000 --dbpath ~/BlinkTag/OCTranspoA
     }
     console.log('Mongo STDOUT: ' + stdout);
     console.log('Mongo STDERR: ' + stderr);
-   
-    
 });
 
 mongoProc.on('exit', function (code) {
