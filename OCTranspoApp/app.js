@@ -17,7 +17,7 @@ var sessionConf = {
     db: {
         db: 'mondb',
         host: '127.0.0.1',
-        port: '5000',
+        port: '27017',
         collection: 'sessions'
     },
     secret: 'aY1dxY7sjnb23Gca077Fh'
