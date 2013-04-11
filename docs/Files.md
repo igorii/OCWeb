@@ -20,6 +20,9 @@ We have created new files on both the client and the server sides, and changed s
     * [Map.js](#mapjs) 
     * [Database.js](#databasejs) 
 * [Heroku](#heroku)
+* [Shell Scripts](#shell-scripts)
+    * [config.sh](configsh)
+    * [run.sh](#runsh)
 
 Client
 ------
@@ -120,3 +123,16 @@ Heroku
 ### Procfile
 
 This file, resembling a Makefile, is used to build and launch our web app using Heroku. This way we can host our web app for free on a single dyno. Going forward we will need to consider whether we want to use Heroku or another alternative. Since MongoDB Integration proved to be a pain with Heroku, we are currently hosting our web app via my own Amazon Cloud server. [top](#files)
+
+Shell Scripts
+-------------
+
+**Path**: `../OCTranpoApp/`
+
+### config.sh
+
+This script will create a directory named `database`. It will then download and extract a tarball that contains our MongoDB database (stop and other information required to do an initial run of the application). Once the database has been extracted, MongoDB will try to upgrade the data in case the locally installed MongoDB daemon (mongod) is a newer version than that used to create the database.
+
+### run.sh
+
+This file simply reruns the node.js server if a non graceful shutdown occurred.
