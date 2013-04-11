@@ -9,23 +9,18 @@ Authors
 
 Description
 -----------
-OC Transpo App is a web application using a Node.js/MongoDB backend, and HTML/CSS/JS frontend. This application will make use of the [Developer API](http://www.octranspo1.com/developers/documentation/) provided by OC Transpo, as well as [Google Maps V3](https://developers.google.com/maps/documentation/javascript/reference/) for displaying location information. The entire OC Transpo schedule as well as stop statistics and other information will be stored in MongoDB, and accessible through our frontend client.
+OC Transpo App is a web application using a Node.js/MongoDB backend, and HTML/CSS/JS frontend. This application will make use of the [Developer API](http://www.octranspo1.com/developers/documentation/) provided by OC Transpo, as well as [Google Maps V3](https://developers.google.com/maps/documentation/javascript/reference/) for displaying location information. The OC Transpo stop information as well as stop statistics and other information will be stored in MongoDB, and accessible through our frontend client via the node.js server.
 
 This application will be primarily used for displaying the real-time locations of buses using GPS data provided by the above API. Some of the key features of this application are:
-* Stop schedule reliability
-    * This will be done by comparing the stored schedule to bus arrival times, where stops are possibly chosen at random to prevent hogging server cycles from OC Transpo
+* Stop schedule popularity
+    * Based on user requests, shown by coloring stops with a 'heat' which represents the popularity of the stop compared to other stops
 * Intuitive interface focussing on map
 * Transit directions from point A to B
-	* This functionality is included in Google Maps V3 via the `DirectionService` object
-* Stop/User statistics and logging stored in MongoDB
-	* Stop interest/popularity based on user requests
+* Stop/User statistics stored in MongoDB
 * User profiles
-	* Allows saving of stops and directions, storing favourites in MongoDB
+	* Allows saving of stops, storing favourites in MongoDB
 	* Allows for synced mobile/desktop client access
 		* Users may log in from mobile devices via the browser, in which case the front end will detect the mobile platform and display correct frontend
-	* Closest stops if mobile client and correct permissions
-
-Other features such as displaying traffic irregularities, bus types, bus fares, etc, may be included if time permits.
 
 Download
 --------
