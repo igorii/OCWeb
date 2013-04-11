@@ -30,20 +30,20 @@ Other features such as displaying traffic irregularities, bus types, bus fares, 
 Download
 --------
 
-##### UNIX
+##### UNIX:
 
 	git clone https://github.com/CarletonU-COMP2406-W2013/BlinkTag.git
-	cd BlinkTag
+	cd BlinkTag/OCTranspoApp/
 	./config.sh
 	
 Run
 -------
 
-##### Single launch
+##### Single launch:
 	
 	sudo node app.js
 	
-##### Persistent launch
+##### Persistent launch:
 	
 	sudo ./run.sh
 	
