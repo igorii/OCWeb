@@ -22,6 +22,17 @@ This application will be primarily used for displaying the real-time locations o
 	* Allows for synced mobile/desktop client access
 		* Users may log in from mobile devices via the browser, in which case the front end will detect the mobile platform and display correct frontend
 
+Main node.js Dependencies
+-------------------------
+
+See docs/Dependencies for more information.
+* Express
+* Jade
+* Request
+* node-xml2js
+* mongoskin
+* connect-mongo
+
 Download
 --------
 

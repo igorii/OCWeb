@@ -10,6 +10,7 @@ project.
 * [User Options](#user-options)
 * [Custom Directions Rendering](#custom-directions-rendering)
 * [Mobile](#mobile)
+* [Refactor](#refactor-code)
 
 Full Schedules
 --------------
@@ -60,5 +61,12 @@ We attempted to create a mobile version of our web app, as the content provided 
 
 Directions and user management still needs to be done here, as well as a slew of bug fixing and optimizations.
 
-[top](#extentions)
+[top](#extensions)
 
+Refactor Code
+-------------
+
+Going forward with this application, as we plan to do, we will be considering refactoring the client side JavaScript to use the constructor pattern rather than having every object created by modules (immediately evoked anonymous functions that return objects). Having past experience using the constructor pattern, I've found that it is easier to maintain and extend objects that are declared in that manner. Doing this, care will need to be taken to ensure our necessary private
+variables (such as the logged in status) remain private. 
+
+[top](#extensions)

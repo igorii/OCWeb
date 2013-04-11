@@ -8,13 +8,26 @@ We have created new files on both the client and the server sides, and changed s
     * [Sidebar.js](#sidebarjs) 
     * [FloatingCtrl.js](#floatingctrljs) 
     * [ClientMap.js](#clientmapjs) 
+* [Views](#views)
+    * [layout.jade](#layoutjade)
+    * [layoutMobile.jade](#layoutmobilejade)
+    * [home.jade](#homejade)
+    * [homeMobile.jade](#homemobilejade)
+    * [sidebar.jade](#sidebarjade)
+    * [floatingCtrl.jade](#floatingctrljade)
 * [Server](#server)
     * [User.js](#userjs-1) 
     * [Map.js](#mapjs) 
     * [Database.js](#databasejs) 
+* [Heroku](#heroku)
 
 Client
 ======
+
+JavaScript
+----------
+
+*/public/js/*
 
 User.js
 -------
@@ -56,6 +69,52 @@ then shows and hides stops markers as necessary by setting their `map` property 
 
 [top](#files)
 
+Views
+=====
+
+*/views/*
+
+layout.jade
+-----------
+
+The main template for desktop users. This largely only specifies the <head> elements, such as scripts and stylesheets for desktop users.
+
+[top](#files)
+
+layoutMobile.jade
+-----------------
+
+The main template for mobile users. Again, the mostly only describes what should be in the <head>, but for mobile users.
+
+[top](#files)
+
+home.jade
+---------
+
+The file specifies the organisation of the desktop version of the web app. 
+
+[top](#files)
+
+homeMobile.jade
+---------------
+
+This file again, specifies the organisation of the web app, but for mobile users.
+
+[top](#files)
+
+sidebar.jade
+------------
+
+Most of the content comes from this file. This specifies the layout of the sidebar. A Div is created for every context the sidebar is able to take, while only the summary div is made visible.
+
+[top](#files)
+
+floatingCtrl.jade
+-----------------
+
+This file specifies the contents of the map control div (the box in the lower right corner).
+
+[top](#files)
 
 Server
 ======
@@ -89,3 +148,12 @@ This node module exposes functions that allows us to get all stop data (stored a
 
 [top](#files)
 
+Heroku
+======
+
+Procfile
+--------
+
+This file, resembling a Makefile, is used to build and launch our web app using Heroku. This way we can host our web app for free on a single dyno. Going forward we will need to consider whether we want to use Heroku or another alternative. Since MongoDB Integration proved to be a pain with Heroku, we are currently hosting our web app via my own Amazon Cloud server.
+
+[top](#files)

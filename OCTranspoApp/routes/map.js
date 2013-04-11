@@ -12,9 +12,12 @@
         , ocTranspoID = '59bd2043'
         , database = require('./database');
 
-    // main handler for get requests to /
+    // Main handler for GET requests to /
     exports.home = function(req, res) {
         var ua = req.header('user-agent');
+        
+        // If the request is from a mobile user-agent, render
+        // the mobile version, otherwise render the main version
         if(/mobile/i.test(ua)) {
             res.render('homeMobile', {
                 title: 'OCTranspo App',
@@ -23,11 +26,11 @@
         } else {
             res.render('home', {
                 title: 'OCTranspo App'
-            });
+            }); // Use default layout
         }
     };
 
-    // handler for getting trips
+    // Handler for getting trips
     exports.getSummary = function(req, res) {
         console.log('Incoming request for stop - ' + req.body.stopID);
 
@@ -47,6 +50,10 @@
             }
         }, function (error, response, body) {
             var js = xml2js.parseString(body, function (err, result) {
+                
+                // Try extracting the interesting information from the
+                // verbose result object. Send an error message to the 
+                // client on failure
                 try {
                     result = result['soap:Envelope']['soap:Body'][0]['GetRouteSummaryForStopResponse'][0]['GetRouteSummaryForStopResult'][0];
                     res.send(JSON.stringify(result));
@@ -57,7 +64,7 @@
         });
     };
 
-    // handler for getting trips
+    // Handler for getting trips
     exports.getTrips = function(req, res) {
         console.log('Incoming request for stop - ' + req.body.stopID);       
 
