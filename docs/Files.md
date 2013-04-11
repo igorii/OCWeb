@@ -27,7 +27,7 @@ Client
 JavaScript
 ----------
 
-*/public/js/*
+Path: *../OCTranspoApp/public/js/*
 
 User.js
 -------
@@ -72,7 +72,7 @@ then shows and hides stops markers as necessary by setting their `map` property 
 Views
 =====
 
-*/views/*
+Path: *../OCTranspoApp/views/*
 
 layout.jade
 -----------
@@ -119,6 +119,8 @@ This file specifies the contents of the map control div (the box in the lower ri
 Server
 ======
 
+Path: *../OCTranspoApp/routes/*
+
 User.js
 -------
 
@@ -133,6 +135,8 @@ Map.js defines the main node module which renders the jade views and serves them
 
 For routes and trips, it exposes functions that contact OCTranspo through their API to get stop summaries and route times.  
 
+Considering this is the main module, it could likely be renamed to index.js, but we were hoping to keep named files depicting their contents.
+
 [top](#files)
 
 Database.js
@@ -142,7 +146,7 @@ Database.js define the node module that handles everything database related, fro
 
 ### Mongoskin
 
-We use a wrapper around the native node-mongodb API called Mongoskin, which allows us to access the database using commands nearly identical to those availble in the mongo shell such as db.createCollection(), db.xxxx.find(0), etc.  
+We use a wrapper around the native node-mongodb API called Mongoskin, which allows us to access the database using commands nearly identical to those available in the mongo shell such as db.createCollection(), db.xxxx.find(0), etc.  
 
 This node module exposes functions that allows us to get all stop data (stored as JSON objects), stop popularity, user information, create a new user, get, add, and remove favourite routes for a user.
 
@@ -150,6 +154,8 @@ This node module exposes functions that allows us to get all stop data (stored a
 
 Heroku
 ======
+
+Path: *../OCTranspoApp/*
 
 Procfile
 --------
