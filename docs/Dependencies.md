@@ -21,21 +21,27 @@ Server
 
 ### [Express](http://expressjs.com/)
 * *MIT License*
+* Used as the framework of the entire web application.
 
 ### [Jade](http://jade-lang.com/)
 * *MIT License*
+* Our chosen HTML templating engine. Works well with Express to render and serve Jade files.
 
 ### [Request](https://github.com/mikeal/request)
 * *Apache License, Version 2.0*
+* Used for easily submitting post requests to the OCTranspo RESTful API.
 
 ### [node-xml2js](https://github.com/Leonidas-from-XIV/node-xml2js)
+* Used for parsing the XML responses received from requests to the OC Transpo API. The responses are often extremely verbose, so xml2js converts the XML response to a JavaScript object, from which the desrired information is extracted.
 
 ### [mongoskin](https://github.com/kissjs/node-mongoskin)
 * *MIT License*
+* Used for conveniently interacting with our MongoDB database. 
 
 ### [connect-mongo](https://github.com/kcbanner/connect-mongo)
-
+* Also used for connecting to our MongoDB database.
 Database
 --------
 
 ### [MongoDB](http://www.mongodb.org/)
+* Used for storing our persistent database. This includes all OC Transpo stop data, stop popularity, and user information such as registered users and users favourite stops.
