@@ -8,8 +8,8 @@
 
     var request = require('request')
         , xml2js = require('xml2js')
-        , ocTranspoKey = '3dbaa821f9f7dbc2cd5ec52f8ceaff63'
-        , ocTranspoID = '59bd2043'
+        , ocTranspoKey = ''
+        , ocTranspoID = ''
         , database = require('./database');
 
     // Main handler for GET requests to /
